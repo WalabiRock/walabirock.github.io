@@ -35,8 +35,8 @@ calificación ≥ 8/10» NO pasa, por lo tanto no se escribe `DONE`.
 
 **Qué pasa.** La red de esta sesión solo permite el buscador; abrir cualquier página de
 precios devuelve 403 del proxy (política de red del entorno «Default»). El agente de costos
-encontró 35 referencias pero no pudo abrir ninguna, así que, siguiendo la regla de no inventar,
-**las 96 partidas están marcadas `ESTIMADO`** y las 35 fuentes como `verificada: false`.
+encontró 35 referencias (para 96 partidas iniciales; después se agregaron 9 más) pero no pudo abrir ninguna, así que, siguiendo la regla de no inventar,
+**las 105 partidas están marcadas `ESTIMADO`** y las 35 fuentes como `verificada: false`.
 
 **Qué se necesita.** Permitir estos hosts en el entorno (o correr la sesión con red abierta):
 tandacasa.com, oneestimate.ai, cronoshare.com.mx, habitissimo.com.mx, cmic.org.mx,
