@@ -142,6 +142,7 @@ S = {
     "chc": _st("chc", fontSize=7, leading=9, fontName=FB, textColor=BLANCO, alignment=TA_CENTER),
     "curl": _st("curl", fontSize=6.5, leading=8.5, splitLongWords=1,
                 textColor=colors.HexColor(HEX_SALVIA)),
+    "csup": _st("csup", fontSize=5.8, leading=7.4, textColor=GRIS),
     "c8": _st("c8", fontSize=8, leading=10.6),
     "c8b": _st("c8b", fontSize=8, leading=10.6, fontName=FB),
     "c8r": _st("c8r", fontSize=8, leading=10.6, alignment=TA_RIGHT),
@@ -189,6 +190,11 @@ def anios(x):
 
 def fecha_larga(f):
     return f"{f.day} de {MESES_LARGOS[f.month - 1]} de {f.year}"
+
+
+def etq(s):
+    """Unifica la etiqueta invariable ESTIMADO en textos que vienen de params.json."""
+    return re.sub(r"\bESTIMAD(?:A|OS|AS)\b", "ESTIMADO", str(s))
 
 
 def e(s):
@@ -688,6 +694,8 @@ def sec_programa(ctx):
     solar = f"paneles solares de {num(kwp['cantidad_num'], 0)}{NB}kWp" if kwp else "paneles solares"
     lav_int = g.get("lavanderia_int_m2")
     lav = f"; lavandería {m2(lav_int)} interiores" if lav_int else ""
+    perg = (f", de los cuales {m2(g['pergola_m2'])} bajo pérgola de acero" if g.get("pergola_m2")
+            else ", con pérgola de acero")
     prog = [["Nivel", "Programa", "Notas"],
             ["Piso 1 (PB)",
              f"Estudio de frente y estudio de fondo con patio privado ({m2(g['patio_post_m2'])}).",
@@ -698,7 +706,7 @@ def sec_programa(ctx):
              f"Núcleo abierto: escalera en U de {num(G['escalera_ancho_m'], 2)}{NB}m de ancho total, pasillo de "
              f"{num(G['pasillo_ancho_m'], 2)}{NB}m y patio de luz. Sin elevador."],
             [f"Piso {niveles + 1} (rooftop)",
-             f"Terraza común bajo pérgola de acero ({m2(g['terraza_m2'])}), cubo de escalera y lavandería de paga "
+             f"Terraza común de {m2(g['terraza_m2'])}{perg}, cubo de escalera y lavandería de paga "
              f"({m2(g['cuarto_azotea_m2'])} construidos{lav}), tinacos y {solar}.",
              "Sin alberca. Uso común de los inquilinos."],
             ["Cada estudio",
@@ -817,7 +825,7 @@ def sec_planos(ctx):
         wi, hi = sh["paper_in"]
         filas.append([f"<b>{e(sh['code'])}</b>", e(sh["name"]), e(sh["scale"]),
                       f"{wi * 2.54:.1f} × {hi * 2.54:.1f}{NB}cm",
-                      "Escala real" if k >= 0.9995 else f"Reducido al {k * 100:.0f}{NB}%"])
+                      ("Tamaño real" if "sin escala" in str(sh["scale"]).lower() else "Escala real") if k >= 0.9995 else f"Reducido al {k * 100:.0f}{NB}%"])
     s.append(tabla(filas, [44, 226, 62, 94, 86], tam=8, nombre="indice_planos"))
     s.append(Spacer(1, 6))
     s.append(p("Los planos son de anteproyecto: sirven para cuantificar y para revisar, no para construir. Remetimientos, "
@@ -1009,6 +1017,14 @@ def _cant(f):
     return num(q, 0) if abs(q - round(q)) < 1e-9 else num(q, 2)
 
 
+def _corto(txt, n=90):
+    """Primeras palabras de un supuesto (corta en espacio, nunca a media cifra)."""
+    txt = " ".join(str(txt).split())
+    if len(txt) <= n:
+        return txt
+    return txt[:n + 1].rsplit(" ", 1)[0].rstrip(" ,;:(") + "…"
+
+
 def _sin_indirectos(pres):
     """Describe las partidas con aplica_indirectos = false: capítulos completos y partidas sueltas."""
     caps, sueltas = [], []
@@ -1018,12 +1034,12 @@ def _sin_indirectos(pres):
         if fuera and len(fuera) == len(fs):
             caps.append(f"{i} ({e(cap)})")
         else:
-            sueltas += [f"{e(f['clave'])} ({e(f['concepto'])})" for f in fuera]
+            sueltas += [f"{e(f['clave'])}, {e(re.sub(r'\s*\([^)]*\)', '', f['concepto']))}" for f in fuera]
     partes = []
     if caps:
         partes.append(("los capítulos " if len(caps) > 1 else "el capítulo ") + ", ".join(caps))
     if sueltas:
-        partes.append(("las partidas " if len(sueltas) > 1 else "la partida ") + ", ".join(sueltas))
+        partes.append(("las partidas " if len(sueltas) > 1 else "la partida ") + "; ".join(sueltas))
     return " y ".join(partes) or "ninguna"
 
 
@@ -1033,7 +1049,8 @@ def sec_presupuesto(ctx):
     s = titulo_seccion(6, f"Escenario base. Precios con IVA incluido, que el modelo supone no recuperable (tratamiento fiscal por confirmar "
                           f"con contador; ver secciones 11 y 13). Importe = cantidad × precio unitario (P.U.), redondeado "
                           f"a pesos. «Estado» indica si el P.U. viene de una fuente verificada (FUENTE) o es {EST()}. "
-                          f"El supuesto de cada partida está en la tabla «Supuestos por partida», más adelante.")
+                          f"Bajo cada concepto, en gris, el inicio de su supuesto; el texto completo y las fuentes están "
+                          f"en «Supuestos por partida», más adelante.")
     anchos = [30, 202, 42, 46, 56, 62, 46, 28]
     filas = [["Clave", "Concepto", "Unidad", "Cantidad", "P.U.", "Importe", "Estado", "Fase"]]
     extra = []
@@ -1044,7 +1061,10 @@ def sec_presupuesto(ctx):
                   ("NOSPLIT", (0, r), (-1, r + 1))]
         for f in (x for x in pres["filas"] if x["capitulo"] == cap):
             est = "FUENTE" if f["estado"] == "FUENTE" else f'<font color="{HEX_TERRACOTA}">{e(f["estado"])}</font>'
-            filas.append([e(f["clave"]), e(f["concepto"]), e(f["unidad"]), _cant(f), money2(f["pu_num"]),
+            con_ = [p(e(f["concepto"]), "c")]
+            if f.get("supuesto"):
+                con_.append(p(e(_corto(etq(f["supuesto"]))), "csup"))
+            filas.append([e(f["clave"]), con_, e(f["unidad"]), _cant(f), money2(f["pu_num"]),
                           money(f["importe"]), est, e(f["fase"])])
         r = len(filas)
         filas.append(["", f"<b>Subtotal {ic} · {e(cap)}</b>", "", "", "", f"<b>{money(pres['por_capitulo'][cap])}</b>",
@@ -1098,7 +1118,7 @@ def sec_presupuesto(ctx):
         extra.append(("BACKGROUND", (0, r), (-1, r), T_SALVIA if tipo == "tot" else T_CONCRETO))
     blo.append(tabla(filas, [176, 256, 80], aline="llr", tam=8, extra=extra, nombre="integracion"))
     s.append(Spacer(1, 4))
-    s.append(KeepTogether(blo))
+    s += blo
     s.append(Spacer(1, 8))
     blo = []
     a = g["total_cubierto_m2"]
@@ -1114,7 +1134,7 @@ def sec_presupuesto(ctx):
     s.append(Spacer(1, 10))
     s.append(CondPageBreak(220))
     s.append(Marca(toc=(1, "Supuestos por partida")))
-    s.append(p("Supuestos por partida", "h2"))
+    s.append(p("Supuestos por partida", ParagraphStyle("h2s", parent=S["h2"], keepWithNext=0)))
     s.append(p("Cada número del presupuesto con su supuesto y sus fuentes (los identificadores F01, F02… remiten a la "
                "sección 13). «Respaldo» distingue los precios apoyados en una cifra publicada que no se pudo abrir ni "
                "verificar de los que son regla práctica sin referencia. Las cantidades marcadas «geo» se miden sobre los "
@@ -1122,7 +1142,7 @@ def sec_presupuesto(ctx):
     resp = {"referencia_no_verificada": "Referencia no verificada", "sin_referencia": "Sin referencia"}
     filas = [["Clave", "Concepto", "Supuesto", "Respaldo", "Fuentes"]]
     for f in pres["filas"]:
-        sup = e(f.get("supuesto", ""))
+        sup = e(etq(f.get("supuesto", "")))
         if f["geo_ref"]:
             k, fac = f["geo_ref"]
             fac_t = "" if abs(fac - 1) < 1e-9 else f" × {fac:g}"
@@ -1155,7 +1175,7 @@ def sec_escenarios(ctx):
         for esc in modelo.ESCENARIOS:
             E = P["escenarios"][esc]
             j = (E.get("justificacion") or {}).get(kj, "")
-            fila.append([p(f"<b>{fmt(E.get(k, 0))}</b>", "c8"), p(e(j), "c")])
+            fila.append([p(f"<b>{fmt(E.get(k, 0))}</b>", "c8"), p(e(etq(j)), "c")])
         filas.append(fila)
     s.append(p("Parámetros y su justificación", "h2"))
     s.append(tabla(filas, [98, 138, 138, 138], extra=[("BACKGROUND", (2, 1), (2, -1), T_SALVIA)], nombre="esc_param"))
@@ -1260,7 +1280,8 @@ def sec_pagos(ctx):
                            ("BOTTOMPADDING", (0, 0), (-1, -1), 0)]))
     s.append(KeepTogether([t]))
     s.append(Spacer(1, 4))
-    s.append(p("Los porcentajes son sobre el capital requerido. Los importes por fase incluyen las partidas de la fase y sus "
+    s.append(p("Los porcentajes son sobre el capital requerido y se ajustan para sumar 100.0 %; el ajuste por redondeo se "
+               "aplica a un renglón. Los importes por fase incluyen las partidas de la fase y sus "
                "indirectos; el terreno se paga a la firma (apartado en la primera fase, saldo y gastos de cierre en la "
                "segunda). No se modela anticipo al constructor.", "nota"))
     return s
@@ -1403,7 +1424,10 @@ def sec_riesgos(ctx):
     share = pres["importe_estimado"] / pres["directo"]
     f0 = ctx.fase_txt("F0")
     f1, f2, f3 = "F1", "F2", "F3"
-    antes_compra = "Antes de F1: hasta entonces solo se paga el apartado."
+    apartado = cronograma._desglose(P, c, ctx.F["base"])["apartado"]
+    pago_f0 = ctx.plan["filas"][0]["importe"]
+    antes_compra = (f"Antes de F1: hasta entonces solo se paga la fase F0 ({money(pago_f0)}, incluido el apartado de "
+                    f"{money(apartado)}).")
     niveles = len(P["rentas"]) // 2
     cap12 = ctx.cap("Conexiones y derechos")
     filas = [["#", "Riesgo", "Consecuencia", "Verificación / mitigación", "Quién", "Antes de"]]
@@ -1412,7 +1436,8 @@ def sec_riesgos(ctx):
          f"Que no se autoricen {niveles} niveles, {len(P['rentas'])} viviendas o el local de planta baja: el proyecto "
          f"cambia o no es viable.",
          "Constancia de uso de suelo favorable, con alineamiento y número oficial, que diga niveles, densidad, COS, CUS y "
-         "remetimientos. Sin ella no se compra.",
+         "remetimientos, y cuántos cajones de estacionamiento exige: el esquema tiene cero cajones para "
+         f"{len(P['rentas'])} viviendas (por confirmar). Sin ella no se compra.",
          "Inversionista, con gestor local", antes_compra),
         (f"Altura del edificio: {num(g.get('altura_pretil_m', g['altura_max_m']), 2)}{NB}m al pretil y "
          f"{num(g['altura_max_m'], 2)}{NB}m al punto más alto (cubo de escalera), con {niveles} niveles más azotea, frente "
@@ -1484,11 +1509,11 @@ def sec_riesgos(ctx):
     ]
     for i, r in enumerate(R, 1):
         filas.append([str(i)] + [x if x.startswith("<") else x for x in (e(r[0]), e(r[1]), e(r[2]), r[3], e(r[4]))])
-    s = titulo_seccion(11, "Lo que puede salir mal y qué documento lo descarta. Ningún renglón trae estadísticas propias: "
-                           "son hechos del sitio y supuestos del modelo.")
-    s.append(tabla(filas, [18, 104, 112, 138, 66, 74], nombre="riesgos"))
+    s = titulo_seccion(11, "Lo que puede salir mal y qué documento lo descarta. Ningún renglón trae estadísticas propias. "
+                           "Los hechos del sitio (PDU 2022 anulado, quejas vecinales de febrero de 2026, nivel freático "
+                           "≈ −0.75 m) son datos del encargo, por documentar; lo demás son supuestos del modelo.")
+    s.append(tabla(filas, [18, 102, 108, 134, 62, 88], nombre="riesgos"))
     s.append(p("Fases: " + "; ".join(f"{e(f['clave'])} {e(f['nombre'])}" for f in ctx.F["base"]) + ".", "nota"))
-    apartado = cronograma._desglose(P, c, ctx.F["base"])["apartado"]
     s.append(Spacer(1, 6))
     s.append(KeepTogether([caja([
         p("<b>Orden de las verificaciones previas: fase " + e(f0.replace(" (", ", ").rstrip(")")) + "</b>", "cuerpo"),
@@ -1657,9 +1682,16 @@ def sec_supuestos(ctx):
                        p(e(P["nota_verificacion_precios"]).replace("'", "«", 1).replace("'", "»", 1), "c8")]))
     no_inc = _seccion_md(os.path.join(AQUI, "cost", "notas_costos.md"), r"no incluid")
     if no_inc:
-        s.append(KeepTogether([p("No incluido en el presupuesto", "h2")] + [vin(md(x)) for x in no_inc]))
+        s += ([p("No incluido en el presupuesto", "h2")] + [vin(md(x)) for x in no_inc] +
+              [Spacer(1, 2), caja([p(
+                "<b>Dos exclusiones que hay que cotizar antes de F3.</b> Los honorarios de «nuestro supervisor», de cuya "
+                "firma depende cada pago de obra, <b>no están en el presupuesto</b>: los paga el inversionista y están "
+                "por cotizar. Las cuotas del IMSS de la obra <b>tampoco están en el presupuesto</b> si el constructor no "
+                "las absorbe: quién las paga queda por definir en el contrato con el constructor. Este documento no "
+                "estima ninguno de los dos importes.", "c8")], fondo=T_TERRACOTA, borde=TERRACOTA)])
 
-    s.append(PageBreak())
+    s.append(Spacer(1, 8))
+    s.append(CondPageBreak(230))
     s.append(Marca(toc=(1, "Lista de fuentes")))
     s.append(p("Lista de fuentes", "h2"))
     nv = sum(1 for f in P["fuentes"] if not f.get("verificada"))
@@ -1809,7 +1841,7 @@ def build(path=None):
         return c
 
     doc = Doc(path, pagesize=letter, leftMargin=MARGEN, rightMargin=MARGEN, topMargin=CUERPO_SUP,
-              bottomMargin=Y_CUERPO_INF, invariant=1, title=f"{PROYECTO} · Propuesta {ctx.ver}",
+              bottomMargin=Y_CUERPO_INF, invariant=1, title=f"Propuesta Donceles {ctx.ver}",
               author=P["preparado_por"], subject=f"{SUBTITULO} · {DIRECCION}", lang="es-MX")
     alto = PAG_H - Y_CUERPO_INF - CUERPO_SUP
     kw = dict(leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
@@ -1827,7 +1859,20 @@ def build(path=None):
                sec_pagos, sec_cronograma, sec_rentas, sec_riesgos, sec_renders, sec_supuestos, sec_observaciones):
         story.append(PageBreak())
         story += fn(ctx)
-    doc.multiBuild(story, canvasmaker=lienzo)
+    # Fecha de los metadatos = fecha del documento (no la del reloj): el PDF sigue siendo reproducible.
+    previo = os.environ.get("SOURCE_DATE_EPOCH")
+    m = re.match(r"\s*(\d{1,2}) de (\w+) de (\d{4})", P["fecha"])
+    if m and m.group(2).lower() in MESES_LARGOS:
+        f_doc = _dt.datetime(int(m.group(3)), MESES_LARGOS.index(m.group(2).lower()) + 1, int(m.group(1)), 12,
+                             tzinfo=_dt.timezone.utc)
+        os.environ["SOURCE_DATE_EPOCH"] = str(int(f_doc.timestamp()))
+    try:
+        doc.multiBuild(story, canvasmaker=lienzo)
+    finally:
+        if previo is None:
+            os.environ.pop("SOURCE_DATE_EPOCH", None)
+        else:
+            os.environ["SOURCE_DATE_EPOCH"] = previo
     return path
 
 

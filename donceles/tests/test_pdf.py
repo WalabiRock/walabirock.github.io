@@ -60,7 +60,19 @@ def _instalar_stub():
                        "paper_in": (w / 150.0, h / 150.0)})
     m = types.ModuleType("drawings")
     m.SHEETS = sheets
-    m.areas = lambda: dict(g)
+    class _Geo(dict):
+        """Cualquier clave de geometría que el stub no conozca vale 10.0 (solo para maquetar)."""
+
+        def __contains__(self, k):
+            return True
+
+        def __missing__(self, k):
+            return 10.0
+
+        def get(self, k, d=None):
+            return self[k]
+
+    m.areas = lambda: _Geo(g)
     m.all_drawings = lambda: None
     m.cuadro_puertas_ventanas = lambda: [
         {"clave": "P-1", "tipo": "Puerta de acceso a estudio", "ancho_m": 0.9, "alto_m": 2.1, "cantidad": 8,
