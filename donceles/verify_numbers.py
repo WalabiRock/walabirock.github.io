@@ -22,6 +22,8 @@ import modelo
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 TOL = 1.0
+# sumas de partidas que el PDF cita en la lista «qué revisar primero»
+GRUPOS = [("2.03", "2.08", "2.09")]
 RX = re.compile(r"\$\s?(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)")
 CLAVE = ["terreno", "cierre", "directo", "indirectos", "subtotal_obra", "contingencia", "escalamiento",
          "inversion_base", "inversion_total", "colchon", "capital_requerido", "renta_bruta",
@@ -61,6 +63,10 @@ def valores_legitimos(P, g):
         # derivados simples que el PDF puede mostrar
         vals += [c["reservas"] + c["colchon"], c["terreno"] + c["cierre"],
                  c["directo"] - c["presupuesto"]["importe_estimado"]]
+        vals.append(modelo.r0(c["presupuesto"]["base_indirectos"] * 0.01))  # un punto de indirectos
+        imp_clave = {f["clave"]: f["importe"] for f in c["presupuesto"]["filas"]}
+        for grupo in GRUPOS:
+            vals.append(sum(imp_clave[k] for k in grupo if k in imp_clave))
         for cap, imp in c["presupuesto"]["por_capitulo"].items():
             vals.append(imp)
         for n, v in c["rentas"]:

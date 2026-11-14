@@ -214,25 +214,21 @@ def construir(P=None, g=None, salida=SALIDA):
             wz[f"{col}{ROW[k]}"].font = Font(bold=True)
 
     # ---------- Plan de pagos (escenario base) ----------
-    try:
-        import cronograma
-        plan = cronograma.plan_pagos(P, base)
-    except Exception as e:  # el plan se omite si el módulo aún no existe
-        plan = None
-        print("aviso: sin hoja Plan de pagos:", e)
+    import cronograma
+    plan = cronograma.plan_pagos(P, base)["filas"]
     if plan:
         wq = wb.create_sheet("Plan de pagos")
         _head(wq, 1, ["Fase / concepto", "Periodo", "Monto (base)", "% del capital", "Acumulado",
                       "Condición de liberación"], [46, 22, 16, 12, 16, 90])
         for i, f in enumerate(plan, 2):
-            wq.cell(i, 1, f"{f.get('clave', '')} {f.get('nombre', '')}".strip())
-            wq.cell(i, 2, f.get("periodo", ""))
-            wq.cell(i, 3, f["monto"]).number_format = MONEY
+            wq.cell(i, 1, f"{f['clave']} · {f['concepto']}")
+            wq.cell(i, 2, f["periodo_txt"])
+            wq.cell(i, 3, f["importe"]).number_format = MONEY
             wq[f"D{i}"] = f"=C{i}/$C${len(plan) + 3}"
             wq[f"D{i}"].number_format = "0.0%"
             wq[f"E{i}"] = f"=SUM($C$2:C{i})"
             wq[f"E{i}"].number_format = MONEY
-            wq.cell(i, 6, f.get("condicion", "")).alignment = Alignment(wrap_text=True)
+            wq.cell(i, 6, " — ".join(x for x in (f.get("disparador"), f.get("bandera")) if x)).alignment = Alignment(wrap_text=True)
         t = len(plan) + 3
         wq.cell(t, 1, "TOTAL = capital requerido").font = Font(bold=True)
         wq[f"C{t}"] = f"=SUM(C2:C{t - 2})"

@@ -253,7 +253,7 @@ def layout(kind):
         L["ruta"] = [Pt(2.65, 0.45), Pt(2.65, 0.985), Pt(1.20, 0.985), Pt(2.65, 0.985), Pt(2.65, 2.685),
                      Pt(3.90, 2.685), Pt(2.65, 2.685), Pt(1.90, 2.685), Pt(1.90, 3.70), Pt(1.00, 3.70),
                      Pt(1.00, Dp - 0.45)]
-        L["label"] = Pt(1.75, 2.25)
+        L["label"] = Pt(1.98, 2.02)
     else:
         bw, bd = 2.20, 1.40
         L["bano"] = R(X1 - bw, 0, X1, bd)
@@ -271,7 +271,7 @@ def layout(kind):
         if front:
             L["muebles"] = [("cama", R(X1 - 2.00, Dp - 1.50, X1, Dp)),
                             ("escritorio", R(X0 + 0.30, Dp - 0.55, X0 + 1.50, Dp)),
-                            ("banca", R(X0, 1.525, X0 + 0.60, 3.325)),
+                            ("banca", R(X0, 1.50, X0 + 0.60, 3.20)),
                             ("guardarropa", R(X1 - 1.20, bd + tb, X1, bd + tb + 0.55))]
             L["ruta"] = [Pt(2.65, 0.45), Pt(2.65, 1.06), Pt(1.30, 1.06), Pt(2.65, 1.06), Pt(2.65, 1.95),
                          Pt(4.10, 1.95), Pt(4.10, 2.56), Pt(5.00, 2.56), Pt(4.10, 2.56), Pt(4.10, 1.95),
@@ -574,12 +574,13 @@ class Ctx:
         for sg in segs:
             a, b = sg[0], sg[1]
             lab = sg[2] if len(sg) > 2 else f2(b - a)
+            size_ = size * (0.82 if abs(b - a) < 0.42 else 1.0)
             if axis == "x":
                 self.ax.plot([a, b], [pos, pos], color=color, lw=0.4, zorder=15)
                 for q in (a, b):
                     self.ax.plot([q - k, q + k], [pos - k, pos + k], color=INK, lw=0.6, zorder=16)
                     self.ax.plot([q, q], [pos - 0.14 * side, pos + 0.07 * side], color=color, lw=0.3, zorder=15)
-                self.ax.text((a + b) / 2, pos + 0.06 * side, lab, fontsize=size, color=INK, ha="center",
+                self.ax.text((a + b) / 2, pos + 0.06 * side, lab, fontsize=size_, color=INK, ha="center",
                              va="bottom" if side > 0 else "top", zorder=16)
             else:
                 self.ax.plot([pos, pos], [a, b], color=color, lw=0.4, zorder=15)
@@ -668,7 +669,7 @@ class Sheet:
                           arrowprops=dict(arrowstyle="-|>", lw=0.9, color=INK, mutation_scale=9))
         self.pax.add_patch(Circle((x, y + 0.4), 0.42, fc="none", ec=INK, lw=0.4, zorder=60))
         self.t(x, y + 1.08, "N*", size=6.5, bold=True, ha="center")
-        self.t(x + 0.6, y + 0.4, "Norte por confirmar\ncon levantamiento", size=4.6, color=GRAY)
+        self.t(x - 0.6, y + 0.4, "Norte por confirmar\ncon levantamiento", size=4.6, color=GRAY, ha="right")
 
     def _title_block(self):
         p, w, h = self.pax, self.wcm, self.hcm
@@ -869,7 +870,7 @@ def _stair_plan(c, nivel):
         c.text(XB0 + 0.62, CY0 + 0.52, "Arranque\nN+0.00", size=4.0)
         c.text(xm, YL1 + 0.66, f"Descanso N+{H / 2:.2f}", size=4.0)
     else:
-        c.text(XA0 + 0.50, CY0 + 0.52, f"Llegada\nN+{z0:.2f}", size=4.0)
+        c.text(XB0 + 0.45, CY0 + 0.30, f"Llegada\nN+{z0:.2f}", size=3.8)
         c.text(xm, YL1 + 0.62, f"Descanso N+{z0 - H / 2:.2f}\n(abajo)", size=3.8, color=GRAY)
 
 
@@ -978,10 +979,10 @@ def _cut_marks(c):
     if c.la:
         return
     dd = dict(c=TERRA, lw=1.1, z=18, ls=(0, (4, 1.2, 1, 1.2)))
-    for (x, y, s) in ((XAA, -1.72, "A"), (XAA, D + 1.32, "A'")):
-        c.line([x, x], [y - 0.1 + (0.38 if y < 0 else -0.62), y + (0.62 if y < 0 else -0.28)], **dd)
-        c.ax.add_patch(Circle((x, y + (-0.02 if y < 0 else 0.02)), 0.24, fc="white", ec=TERRA, lw=0.7, zorder=19))
-        c.text(x, y + (-0.02 if y < 0 else 0.02), s, size=5.6, bold=True, color=TERRA)
+    for (x, y, s) in ((XAA, -2.12, "A"), (XAA, D + 1.62, "A'")):
+        c.line([x, x], [y + 0.28, y + 0.62] if y < 0 else [y - 0.62, y - 0.28], **dd)
+        c.ax.add_patch(Circle((x, y), 0.24, fc="white", ec=TERRA, lw=0.7, zorder=19))
+        c.text(x, y, s, size=5.6, bold=True, color=TERRA)
         c.arrow(x - 0.27, y, x - 0.62, y, c=TERRA, lw=0.7, ms=5)
     for (x, y, s) in ((-2.22, YBB, "B"), (W + 1.72, YBB, "B'")):
         c.line([x + (0.3 if x < 0 else -0.62), x + (0.62 if x < 0 else -0.3)], [y, y], **dd)
@@ -999,13 +1000,13 @@ def _plan_common(sh, c, front_segs, rear_segs, rear_y):
     c.chain([(0, W)], -1.14, "x", side=-1)
     c.chain(rear_segs, rear_y, "x", side=1)
     c.chain([(0, yF), (yF, yC), (yC, yR), (yR, D)], W + 0.55, "y", side=1)
-    c.chain([(t, yF - t / 2), (CY0, CY1), (yC + t / 2, yR - t), (yR, D)], -0.55, "y", side=-1)
+    c.chain([(t, yF - t / 2), (CY0, CY1), (yC + t / 2, yR - t)], -0.55, "y", side=-1)
     c.chain([(0, yR), (yR, D)], -1.15, "y", side=-1)
     c.chain([(0, D)], -1.72, "y", side=-1)
     _cut_marks(c)
-    c.text(3.9, -1.98, "CALLE · frente del lote 6.00 m", size=5.4, color=GRAY)
-    sh.scale_bar(11.6, 2.55)
-    sh.north(16.3, 2.15)
+    c.text(3.9, -2.12, "CALLE · frente del lote 6.00 m", size=5.4, color=GRAY)
+    sh.scale_bar(11.6, 2.3)
+    sh.north(17.3, 3.3)
 
 
 def _panel_x():
@@ -1095,10 +1096,9 @@ def plan_pb():
     lx, ly = L["label"]
     c.text(lx, ly - 0.78, "Convertible a local\n(sujeto a uso de suelo)", size=4.4, color=GRAY)
     # pasillo de acceso, vestíbulo y servicios
-    c.text(XA + PW / 2, 2.55, f"Pasillo de acceso {f2(PW)} m libres", size=4.8, color=GRAY, rot=90)
-    c.tag(XA + PW / 2, 0.45, "R1", door=True)
+    c.text(XA + PW / 2 + 0.1, 3.0, f"Pasillo de acceso {f2(PW)} m libres", size=4.8, color=GRAY, rot=90)
     c.rect(XA - t + 0.02, 0.60, XA - 0.02, 2.40, fc=TERRA, ec="white", lw=0.3, z=6)
-    c.note(XA + 0.22, 1.5, 9)
+    c.note(XA + 0.24, 0.95, 9)
     c.text((xS + xP) / 2, CY0 + 2.35, "Vestíbulo", size=4.8, color=GRAY, rot=90)
     c.rect(*CIS, fc="#cfdbe3", ec=INK, lw=0.7, z=4)
     c.rect(CIS[0] + 0.15, CIS[1] + 0.15, CIS[2] - 0.15, CIS[3] - 0.15, fc="none", ec=WATER, lw=0.4, z=4.2,
@@ -1110,16 +1110,16 @@ def plan_pb():
     for i in range(2):
         c.rect(bx0 + i * 0.62, by0, bx0 + i * 0.62 + 0.55, by0 + 0.65, fc=CONC, lw=0.4, z=4)
     c.note(bx0 - 0.25, by0 + 0.32, 8)
-    c.rect(XB0 + 0.08, YL1 - 0.95, XB1 - 0.08, YL1 - 0.25, fc="none", ec=INK, lw=0.4, z=4.5, ls=(0, (1.5, 1)))
-    c.note((XB0 + XB1) / 2, YL1 - 0.60, 10)
-    c.text((xP + W - t) / 2 + 0.2, CY0 + 0.55, "Vestíbulo exterior\n(piso del patio de luz)", size=4.4, color=GREEN)
+    c.rect(XB0 + 0.28, YL1 - 0.95, XB1 - 0.06, YL1 - 0.25, fc="white", ec=INK, lw=0.4, z=4.5, ls=(0, (1.5, 1)))
+    c.note((XB0 + XB1) / 2 + 0.11, YL1 - 0.60, 10)
+    c.text((xP + W - t) / 2 + 0.25, CY0 + 0.82, "Vestíbulo exterior\n(piso del patio de luz)", size=4.4, color=GREEN)
     c.text(W / 2, (yR + D) / 2 + 0.22, "PATIO PRIVADO · estudio fondo PB", size=5.6, bold=True, color=GREEN)
     c.text(W / 2, (yR + D) / 2 - 0.2, f"{f2(W - 2 * t)} × {f2(D - yR - t)} m libres · {W * (D - yR):.1f} m² · "
            f"barda {BARDA:.2f} m (ESTIMADO)", size=4.6, color=GREEN)
     c.text(2.4, -0.42 - 0.38, "", size=4)
     c.text(-0.45, -0.45, "Banqueta", size=4.4, color=GRAY, rot=0)
-    _plan_common(sh, c, [(0, 0.50), (0.50, 1.50), (1.50, 2.10), (2.10, 3.90), (3.90, XA - t), (XA, W - t)],
-                 [(0, 0.60), (0.60, 2.10), (2.40, 3.30), (3.90, 5.40), (5.40, W)], D + 0.5)
+    _plan_common(sh, c, [(0, 0.50), (0.50, 1.50), (1.50, 2.10), (2.10, 3.90), (3.90, XA - t), (XA - t, XA, ""), (XA, W - t), (W - t, W, "")],
+                 [(0, 0.60), (0.60, 2.10), (2.10, 2.40), (2.40, 3.30), (3.30, 3.90), (3.90, 5.40), (5.40, W)], D + 0.5)
     A = areas()
     x, y = _panel_x(), 23.9
     y = sh.panel(x, y, "MOBILIARIO Y EQUIPO", [
@@ -1225,7 +1225,7 @@ def plan_roof(lineart=False):
     pw_, ph_ = 2.28, 1.13
     ox_ = (W - 2 * pw_ - 0.06) / 2
     for i in range(6):
-        ax_, ay_ = ox_ + (i % 2) * (pw_ + 0.06), 0.72 + (i // 2) * (ph_ + 0.06)
+        ax_, ay_ = ox_ + (i % 2) * (pw_ + 0.06), 0.85 + (i // 2) * (ph_ + 0.06)
         c.rect(ax_, ay_, ax_ + pw_, ay_ + ph_, fc=WATER, ec="white", lw=0.5, z=3, alpha=0.28)
         c.rect(ax_, ay_, ax_ + pw_, ay_ + ph_, fc="none", ec=WATER, lw=0.4, z=3.1)
     c.rect(t + 0.02, 0.9, t + 0.47, 3.9, fc=CONC, lw=0.4, z=4)
@@ -1247,15 +1247,14 @@ def plan_roof(lineart=False):
     c.note(4.55, 11.62, 8)
     c.note(4.2, y0 + 0.75, 10)
     c.note((xP + W - t) / 2, (CY0 + CY1) / 2 + 0.75, 9)
-    c.note(XA0 + 0.5, CY0 + 1.6, 5)
-    c.text(W / 2, 4.28, "TERRAZA COMÚN BAJO PÉRGOLA", size=5.8, bold=True, color=TERRA, bg="#f5f1ea")
-    c.text(W / 2, 0.52, f"N+{TOP:.2f} · pretil de block {PRETIL:.2f} m", size=4.6, color=TERRA, bold=True,
+    c.note(XA0 + 0.45, YL1 + 0.27, 5)
+    c.text(W / 2, 0.6, f"TERRAZA COMÚN BAJO PÉRGOLA · N+{TOP:.2f}", size=5.2, bold=True, color=TERRA,
            bg="#f5f1ea")
     c.text((xP + W - t) / 2, (CY0 + CY1) / 2 - 0.1, "Vacío\npatio de luz", size=5, color=GREEN, bold=True)
     c.text((xS + t + xP) / 2 + 0.03, (CY0 + CY1) / 2, f"Paso {f2(xP - XQ)}", size=4.4, color=GRAY, rot=90)
     c.text(W / 2, (yR + D) / 2, "Vacío sobre patio posterior (PB)", size=5.2, color=GRAY)
     c.text(4.1, y0 + 1.25, "Servicio y tendido", size=4.6, color=GRAY)
-    fs = [(0, px0), (px0, px1), (px1, W)]
+    fs = [(0, px0, ""), (px0, px1, f"{f2(px1 - px0)} pérgola"), (px1, W, "")]
     _plan_common(sh, c, fs, [(0, XQ), (XQ, xP), (xP, W - t)], D + 0.5)
     A = areas()
     x, y = _panel_x(), 23.9
@@ -1269,6 +1268,7 @@ def plan_roof(lineart=False):
             "de ventilación."),
         (6, "Lavandería de paga 1.90 × 3.00 m: 2 lavadoras y 2 secadoras."),
         (7, "Tarja de servicio."),
+        "Pretil perimetral de block de 1.10 m.",
         (8, f"4 tinacos de 1,100 L sobre base de concreto de {TIN_B:.2f} m; quedan por debajo de la losa "
             "del cubo y detrás del pretil."),
         (9, "Vacío del patio de luz: pretil al sur y norte, barandal de herrería de 1.10 m al poniente."),
@@ -1328,8 +1328,8 @@ def plan_sitio():
     c.text(3.0, 2.5, "Terraza\ncon pérgola", size=4.8, color=TERRA)
     c.text((xP + W - t) / 2, (CY0 + CY1) / 2, "Patio\nde luz", size=4.4, color=GREEN)
     c.text(XQ / 2, (YQ0 + YQ1) / 2, "Cubo y lavandería", size=4.2, rot=90)
-    c.text(3.0, 9.6, "EDIFICIO\n4 niveles + azotea", size=5.2, bold=True)
-    c.text(3.0, (yR + D) / 2, "Patio posterior 6.00 × 2.00", size=4.6, color=GREEN)
+    c.text(4.05, 9.6, "EDIFICIO\n4 niveles + azotea", size=5.0, bold=True)
+    c.text(2.7, (yR + D) / 2, "Patio posterior 6.00 × 2.00", size=4.6, color=GREEN)
     c.chain([(0, W)], -2.2, "x", side=-1, size=5.2)
     c.chain([(0, yR), (yR, D)], W + 1.0, "y", side=1, size=5.2)
     c.chain([(0, D)], -1.2, "y", side=-1, size=5.2)
@@ -1338,13 +1338,14 @@ def plan_sitio():
     def leader(x0, y0, x1, y1, s, ha="left"):
         c.line([x0, x1], [y0, y1], c=TERRA, lw=0.5, z=18)
         c.circle(x0, y0, 0.09, fc=TERRA, ec=TERRA, z=18)
-        c.text(x1 + (0.2 if ha == "left" else -0.2), y1, s, size=4.8, color=TERRA, ha=ha, bold=True, ls=1.2)
+        c.text(x1 + (0.2 if ha == "left" else -0.2), y1, s, size=4.8, color=TERRA, ha=ha, bold=True, ls=1.2,
+               bg="white")
 
     leader(W - 0.6, 0.0, W + 3.4, -2.9, "Restricción frontal propuesta: 0.00 m\n(a paño de alineamiento) — por confirmar\n"
            "con constancia de uso de suelo")
     leader(W, 5.6, W + 3.4, 12.6, "Restricciones laterales propuestas: 0.00 m\n(muros a colindancia) — por confirmar\n"
            "con constancia de uso de suelo")
-    leader(4.6, yR + 1.0, W + 3.4, 17.0, "Restricción posterior propuesta: 2.00 m\n(patio privado) — por confirmar\n"
+    leader(5.3, yR + 1.45, W + 3.4, 15.78, "Restricción posterior propuesta: 2.00 m\n(patio privado) — por confirmar\n"
            "con constancia de uso de suelo")
     leader(0.0, 11.0, -3.2, 17.6, "Lindero del lote\n6.00 × 15.00 m", ha="right")
     leader(1.3, -0.75, -3.2, -2.9, "Acceso peatonal;\nsin cochera en el lote", ha="right")
@@ -1375,8 +1376,8 @@ def plan_sitio():
         "Gris: construcción propuesta (vista de azotea).",
         "Gris claro: vecinos de 1 nivel (contexto, esquemático).",
     ], width=44)
-    sh.scale_bar(12.7, 2.35, marks=(0, 2, 5, 10))
-    sh.north(16.6, 2.0)
+    sh.scale_bar(12.7, 2.35, marks=(0, 2, 5))
+    sh.north(17.4, 2.75)
     sh.save()
 
 
@@ -1460,7 +1461,6 @@ def corte_longitudinal():
         c.text(2.6, z + 1.45, f"Estudio frente · {nm}", size=5)
         c.text(11.0, z + 1.45, f"Estudio fondo · {nm}", size=5)
         c.level(-0.75, z, f"N+{z:.2f}", size=4.8)
-    c.text(YL0 + 1.5, 0.32, "bodega", size=3.8, color=GRAY)
     c.text((CY0 + YL0) / 2, 0.55, "Arranque", size=3.8, rot=90, color=GRAY)
     c.text(CY1 - 0.45, H / 2 + 0.32, f"Descanso\nN+{H / 2:.2f}", size=3.8)
     # azotea
@@ -1478,8 +1478,8 @@ def corte_longitudinal():
         y0 = yC + t / 2 + 0.12 + i * 0.70
         c.rect(y0, z, y0 + 0.64, z + 0.90, fc="white", ec=GRAY, lw=0.4, z=2)
         c.circle(y0 + 0.32, z + 0.5, 0.2, ec=GRAY, lw=0.3, z=2.1)
-    c.text((CY0 + CY1) / 2, z + 1.75, "Cubo de escalera", size=4.8)
-    c.text(yC + t / 2 + LAV / 2, z + 1.75, "Lavandería", size=4.8)
+    c.text((CY0 + CY1) / 2, z + 2.08, "Cubo de escalera", size=4.8)
+    c.text(yC + t / 2 + LAV / 2, z + 2.08, "Lavandería", size=4.8)
     # tinacos (en proyección, detrás del plano de corte)
     for ty in sorted(set(p[1] for p in TINACOS)):
         c.rect(ty - TIN_R, z + TIN_B, ty + TIN_R, z + TIN_B + TIN_H, fc="none", ec=GRAY, lw=0.5, z=3,
@@ -1491,24 +1491,25 @@ def corte_longitudinal():
     for yy in (py0, py1):
         c.rect(yy - 0.04, z, yy + 0.04, z + PERG_H, fc=INK, z=4)
     c.rect(py0 - 0.15, z + PERG_H - 0.12, py1 + 0.15, z + PERG_H, fc=INK, z=4)
-    c.rect(0.72, z + PERG_H + 0.02, 0.72 + 3 * 1.19, z + PERG_H + 0.08, fc=WATER, ec=WATER, z=4)
+    c.rect(0.85, z + PERG_H + 0.02, 0.85 + 3 * 1.19 - 0.06, z + PERG_H + 0.08, fc=WATER, ec=WATER, z=4)
     c.rect(2.0, z, 4.1, z + 0.75, fc=CONC, ec=GRAY, lw=0.3, z=2)
     c.text(2.5, z + 1.55, "Terraza común", size=5)
     c.line([1.9, 1.3], [z + PERG_H + 0.45, z + PERG_H + 0.1], c=GRAY, lw=0.3, z=10)
     c.text(1.95, z + PERG_H + 0.45, "Pérgola de acero con paneles solares", size=4.4, color=INK, ha="left")
-    c.line([11.9, 11.6], [z + 2.35, z + TIN_B + TIN_H], c=GRAY, lw=0.3, z=10)
-    c.text(10.2, z + 2.48, "4 tinacos de 1,100 L sobre base\n(en proyección, detrás del corte)", size=4.2,
-           color=GRAY, ha="left", va="bottom")
+    c.line([yR + 0.3, 12.6], [z + 2.1, z + TIN_B + TIN_H - 0.15], c=GRAY, lw=0.3, z=10)
+    c.text(yR + 0.35, z + 2.1, "4 tinacos de\n1,100 L sobre base\n(en proyección,\ndetrás del corte)", size=4.2,
+           color=GRAY, ha="left", va="center")
     c.level(-0.75, z, f"N+{z:.2f} azotea", size=4.8)
     c.level(-0.75, z + PRETIL, f"N+{z + PRETIL:.2f} pretil", size=4.8)
-    c.level(-0.75, z + CUBO_H, f"N+{z + CUBO_H:.2f} losa de cubo", size=4.8)
+    c.level(-0.75, z + CUBO_H, f"N+{z + CUBO_H:.2f} cubo", size=4.8)
     # cotas verticales
     c.chain([(i * H, (i + 1) * H) for i in range(NP)] + [(TOP, TOP + PRETIL)], D + 0.55, "y", side=1)
     c.chain([(0, TOP + CUBO_H, f"{TOP + CUBO_H:.2f} altura máxima (verificar norma)")], D + 1.2, "y", side=1)
-    c.chain([(H, H + hw, f"{hw:.2f} libre"), (H + hw, 2 * H, f2(SL))], 3.75, "y", side=1, size=4.4)
+    c.chain([(H, H + hw, f"{hw:.2f} libre")], 3.75, "y", side=1, size=4.4)
+    c.text(3.75, H + hw + SL / 2, f"losa {f2(SL)}", size=4.0, color="white", bold=True)
     c.chain([(0, yF), (yF, yC), (yC, yR), (yR, D)], TOP + CUBO_H + 0.75, "x", side=1)
     c.chain([(CY0, YL0, f2(LAND)), (YL0, YL1, f"7 × {HU:.2f} = {RUN:.2f}"), (YL1, CY1, f2(LAND))],
-            2 * H + hw - 0.2 - 2.9 + 2.55, "x", side=1, size=4.0)
+            TOP + 1.3, "x", side=1, size=4.0)
     # notas en la franja del pie de plano
     x0 = sh.wcm - 4.5
     e = escalera()
@@ -1529,11 +1530,11 @@ def corte_longitudinal():
 
 
 def corte_transversal():
-    sh = Sheet("A-06", (-4.3, -3.6))
+    sh = Sheet("A-06", (-5.6, -4.6))
     c = sh.ctx
-    xa, xb = -3.6, 9.4
+    xa, xb = -2.65, 8.65
     _ground(c, xa, xb, zb=-1.5)
-    c.text(-2.2, -1.0, "Nivel freático\n≈ N−0.75 (verificar)", size=4.4, color=WATER)
+    c.text(-1.45, -1.1, "Nivel freático\n≈ N−0.75 (verificar)", size=4.4, color=WATER)
     c.rect(0, -FOUND, W, 0, fc=CUT, ec=INK, lw=0.6, z=3)
     c.text(W / 2, -FOUND / 2, "Losa de cimentación", size=4.6, color="white", bold=True)
     for (a, b, s) in ((xa + 0.2, -0.05, "Vecino\n1 nivel"), (W + 0.05, xb - 0.2, "Vecino\n1 nivel")):
@@ -1547,15 +1548,13 @@ def corte_transversal():
         c.rect(0, z, t, z + H, fc=INK, z=4)
         c.rect(W - t, z, W, z + H, fc=INK, z=4)
         # fondo: muro del núcleo (yC) con P1 y V3
-        c.rect(t, z, W - t, z + hw, fc="#f1f2ef", ec="none", z=1)
+        c.rect(t, z, W - t, z + H, fc="#f1f2ef", ec="none", z=1)
         c.rect(xS + 0.15, z, xS + 1.05, z + 2.10, fc="white", ec=GRAY, lw=0.4, z=1.5)
         for (k, m, a0, a1) in VANOS[niv]:
             if m == "C" and k == "V3":
                 c.rect(a0, z + 1.90, a1, z + 2.30, fc="white", ec=GRAY, lw=0.4, z=1.5)
         # losa del pasillo cortada y trabe/losa al fondo
         c.rect(xS, z + hw, xP, z + H, fc=CUT, ec=INK, lw=0.5, z=5)
-        c.rect(t, z + hw, xS, z + H, fc=LIGHT, ec=GRAY, lw=0.3, z=2)
-        c.rect(xP, z + hw, W - t, z + H, fc=LIGHT, ec=GRAY, lw=0.3, z=2)
         # descanso al fondo y huellas más allá del corte
         c.rect(XB0, z + H / 2 - 0.14, XA1, z + H / 2, fc=LIGHT, ec=GRAY, lw=0.4, z=2.5)
         for j in range(5, NRF):
@@ -1571,7 +1570,7 @@ def corte_transversal():
         c.line([xP, xP], [z + H, z + H + 1.10], c=INK, lw=0.6, z=6) if i < NP - 1 else None
         c.line([XA1, XA1], [z + zc_a, z + zc_a + 0.95], c=INK, lw=0.5, z=6)
         c.line([XB1, XB1], [z + zc_b, z + zc_b + 0.95], c=INK, lw=0.5, z=6)
-        c.level(-0.9, z, f"N+{z:.2f}", size=4.8)
+        c.level(-3.75, z, f"N+{z:.2f}", size=4.8)
         nm = "PB" if i == 0 else f"Piso {i + 1}"
         c.text((xS + xP) / 2, z + 1.2, f"Pasillo\n{nm}", size=4.2, color=INK)
     # cisterna y basura en PB (al fondo)
@@ -1598,17 +1597,15 @@ def corte_transversal():
     for tx in xs_:
         c.rect(tx - TIN_R, z + TIN_B, tx + TIN_R, z + TIN_B + TIN_H, fc="#59605b", ec=INK, lw=0.4, z=2)
     c.text(4.55, z + TIN_B + TIN_H + 0.42, "Tinacos 4 × 1,100 L\n(al fondo, sobre base)", size=4.4, color=INK)
-    c.level(-0.9, z, f"N+{z:.2f} azotea", size=4.8)
-    c.level(-0.9, z + CUBO_H, f"N+{z + CUBO_H:.2f} losa de cubo", size=4.8)
-    c.level(W + 1.75, z + PRETIL, f"N+{z + PRETIL:.2f} pretil", side=1, size=4.8)
-    c.level(W + 1.75, z + TIN_B + TIN_H, f"N+{z + TIN_B + TIN_H:.2f} tinacos", side=1, size=4.8)
-    c.chain([(i * H, (i + 1) * H) for i in range(NP)], W + 0.55, "y", side=1)
-    c.chain([(0, TOP + CUBO_H, f"{TOP + CUBO_H:.2f} altura máxima (verificar norma)")], -2.75, "y", side=-1)
+    c.level(-3.75, z, f"N+{z:.2f} azotea", size=4.8)
+    c.level(-3.75, z + CUBO_H, f"N+{z + CUBO_H:.2f} cubo", size=4.8)
+    c.level(-3.75, z + PRETIL, f"N+{z + PRETIL:.2f} pretil", size=4.8)
+    c.level(-3.75, z + TIN_B + TIN_H, f"N+{z + TIN_B + TIN_H:.2f} tinacos", size=4.8)
+    c.chain([(0, TOP + CUBO_H, f"{TOP + CUBO_H:.2f} altura máxima (verificar norma)")], -2.95, "y", side=-1)
     c.chain([(t, XB1), (XA0, XA1), (xS, xP), (xP, W - t)], -1.75, "x", side=-1, size=4.6)
     c.chain([(0, W)], -2.35, "x", side=-1)
-    c.text(W / 2, -2.95, "Ancho de rampa · rampa · pasillo · patio de luz (claros libres)", size=4.4, color=GRAY)
     e = escalera()
-    x, y = 14.0, 23.9
+    x, y = 14.55, 23.9
     y = sh.panel(x, y, "NOTAS DEL CORTE B–B'", [
         f"Corte por y = {YBB:.2f} m (a media rampa), vista hacia el fondo del lote.",
         f"Rampa junto al pasillo cortada en el peralte 4 (N+{zc_a:.2f} sobre cada piso); rampa junto "
@@ -1620,14 +1617,15 @@ def corte_transversal():
         "Muros de colindancia de block de 15 cm, sin vanos hacia los vecinos.",
         f"Cisterna superficial de {CIS_H:.2f} m de alto en el piso del patio de luz (PB); su tapa "
         "queda bajo la ventila V3 (antepecho 1.90).",
+        "Cotas inferiores: rampa, rampa, pasillo y patio de luz (claros libres).",
         "Vecinos de 1 nivel: contexto esquemático.",
-    ], width=33, size=4.8, lead=0.25)
+    ], width=31, size=4.8, lead=0.25)
     y = sh.panel(x, y, "ALTURAS", [
         f"Entrepiso {H:.2f} m · libre {H - SL:.2f} m.",
         f"Azotea N+{TOP:.2f}; pretil N+{TOP + PRETIL:.2f}; losa de cubo N+{TOP + CUBO_H:.2f}.",
         "Altura máxima por confirmar con la norma aplicable.",
-    ], width=33, size=4.8, lead=0.25)
-    sh.scale_bar(14.0, 2.5, marks=(0, 1, 2))
+    ], width=31, size=4.8, lead=0.25)
+    sh.scale_bar(14.55, 2.5, marks=(0, 1, 2))
     sh.save()
 
 
@@ -1730,7 +1728,7 @@ def _fachada_draw(c, rear=False, tags=True):
                     c.line([x0 + j * (x1 - x0) / n] * 2, [z + ant, z + ant + al], lw=0.9, z=6)
                 c.rect(x0 - 0.06, z + ant - 0.07, x1 + 0.06, z + ant, fc="#d2d4d0", ec=INK, lw=0.4, z=5)
             elif k == "C1":
-                _celosia_elev(c, x0, z + ant, x1, z + ant + al, cols[(i + (1 if rear else 0)) % 2])
+                _celosia_elev(c, x0, z + ant, x1, z + ant + al, cols[(i + (0 if rear else 1)) % 2])
             elif k in ("P3", "P4"):
                 c.rect(x0, z, x1, z + al, fc="#2b2f2c", ec=INK, lw=1.0, z=5)
                 c.rect(x0 + 0.12, z + 0.95, x1 - 0.12, z + al - 0.12, fc=GLASS, ec=CONC, lw=0.4, z=6)
@@ -1761,7 +1759,7 @@ def _fachada_sheet(code, rear):
         c.level(-3.35, i * H, f"N+{i * H:.2f}", size=4.8)
     c.level(-3.35, TOP, f"N+{TOP:.2f} azotea", size=4.8)
     c.level(-3.35, ztop, f"N+{ztop:.2f} pretil", size=4.8)
-    c.level(-3.35, TOP + CUBO_H, f"N+{TOP + CUBO_H:.2f} losa de cubo", size=4.8)
+    c.level(-3.35, TOP + CUBO_H, f"N+{TOP + CUBO_H:.2f} cubo", size=4.8)
     c.chain([(i * H, (i + 1) * H) for i in range(NP)] + [(TOP, ztop)], W + 3.15, "y", side=1)
     c.chain([(0, TOP + CUBO_H, f"{TOP + CUBO_H:.2f} altura máxima (verificar norma)")], W + 3.75, "y", side=1)
     muro = "N" if rear else "S"
@@ -1800,17 +1798,17 @@ def _fachada_sheet(code, rear):
         notes = [
             "Vista desde el fondo del lote hacia la calle (el poniente queda a la derecha).",
             "Pisos 2–4: ventana corrediza V1 y celosía C1 de piso a techo, alternando salvia y "
-            "terracota por nivel.",
+            "terracota por nivel (terracota en PB y piso 3).",
             "PB: ventana V5, puerta P4 al patio privado de 6.00 × 2.00 m y celosía C1.",
             "Azotea: pretil de 1.10 m; lavandería remetida 1.03 m; tinacos sobre base detrás del pretil.",
             "Bardas de patio y vecinos: esquemáticos, por levantar.",
         ]
-    x, y = 12.2, 23.9
-    y = sh.panel(x, y, "NOTAS DE FACHADA", notes, width=46, size=4.9, lead=0.255)
-    y = sh.panel(x, y, "ALTURAS", [
+    sh.panel(0.5, 24.2, "NOTAS DE FACHADA", notes, width=92, size=4.9, lead=0.255)
+    sh.panel(11.6, 24.2, "ALTURAS", [
         f"Entrepisos de {H:.2f} m; azotea N+{TOP:.2f}; pretil N+{ztop:.2f}; losa de cubo "
         f"N+{TOP + CUBO_H:.2f} (altura máxima, verificar norma).",
-    ], width=46, size=4.9, lead=0.255)
+        "Clave de vanos: ver cuadro en lámina A-10.",
+    ], width=54, size=4.9, lead=0.255)
     sh.scale_bar(12.2, 2.5, marks=(0, 1, 2, 5))
     sh.save()
 
@@ -1920,7 +1918,7 @@ def _iso_scene():
     pw_, ph_ = 2.28, 1.13
     ox_ = (W - 2 * pw_ - 0.06) / 2
     for i in range(6):
-        ax_, ay_ = ox_ + (i % 2) * (pw_ + 0.06), 0.72 + (i // 2) * (ph_ + 0.06)
+        ax_, ay_ = ox_ + (i % 2) * (pw_ + 0.06), 0.85 + (i // 2) * (ph_ + 0.06)
         box(ax_, ay_, z + PERG_H + 0.02, ax_ + pw_, ay_ + ph_, z + PERG_H + 0.07, "#3b5873")
     box(1.9, 2.05, z, 4.1, 2.85, z + 0.75, "#b9bcb7")
     box(t, 0.9, z, t + 0.45, 3.9, z + 0.45, "#b9bcb7")
@@ -1974,8 +1972,8 @@ def _iso_render(wpx=2060, ss=2):
             pt = np.array([cx, cy, z1])
             add(pt, p + (0, 0, z1 - z0) - pt, q + (0, 0, z1 - z0) - pt, (0, 0, 1), col, grp * 4, tri=True)
     # encuadre
-    crop = [(-5.5, -4.5, 0), (11.5, -4.5, 0), (11.5, 18.5, 0), (-5.5, 18.5, 0), (0, 0, TOP + CUBO_H + 0.6),
-            (W, yR, TOP + CUBO_H + 0.6)]
+    crop = [(-3.2, -3.2, 0), (10.0, -3.2, 0), (10.0, 16.5, 0), (-3.2, 16.5, 0), (0, 0, TOP + CUBO_H + 0.8),
+            (0, yR, TOP + CUBO_H + 0.8)]
     sx = [np.array(p, float) @ r for p in crop]
     sy = [np.array(p, float) @ u for p in crop]
     sx0, sx1, sy0, sy1 = min(sx), max(sx), min(sy), max(sy)
@@ -2033,34 +2031,34 @@ def isometrico():
     im, dm, proj = _iso_render()
     sh = Sheet("A-09")
     wi, hi = im.size
-    wcm = 17.5
-    hcm = wcm * hi / wi
-    x0, y0 = 0.5, 1.9 + (22.6 - hcm) / 2
+    kf = min(17.5 / wi, 21.2 / hi)
+    wcm, hcm = wi * kf, hi * kf
+    x0, y0 = (sh.wcm - wcm) / 2, 1.9 + (21.8 - hcm) / 2
     sh.pax.imshow(np.asarray(im), extent=(x0, x0 + wcm, y0, y0 + hcm), zorder=5, aspect="auto",
                   interpolation="lanczos")
     sh.pax.set_xlim(0, sh.wcm)
     sh.pax.set_ylim(0, sh.hcm)
 
-    def lab(p, tx, ty, s, ha="left"):
+    def lab(p, dx, dy, s, ha="left"):
         px, py = proj(p)
         ax_, ay_ = x0 + px / wi * wcm, y0 + hcm - py / hi * hcm
+        tx, ty = ax_ + dx, ay_ + dy
         sh.pax.plot([ax_, tx], [ay_, ty], color=INK, lw=0.35, zorder=58)
         sh.pax.add_patch(Circle((ax_, ay_), 0.05, fc=INK, ec=INK, zorder=58))
         sh.pax.text(tx + (0.1 if ha == "left" else -0.1), ty, s, fontsize=5.2, color=INK, ha=ha, va="center",
-                    zorder=59, linespacing=1.2, bbox=dict(fc="white", ec="none", pad=1.0, alpha=0.9))
+                    zorder=59, linespacing=1.2, bbox=dict(fc="white", ec="none", pad=1.0, alpha=0.92))
 
     z = TOP
-    ytop = y0 + hcm
-    lab((3.0, 2.6, z + PERG_H + 0.07), 3.2, ytop - 1.0, "Terraza común bajo pérgola\ncon 6 paneles solares")
-    lab((1.1, 7.0, z + CUBO_H), 8.3, ytop - 0.7, "Cubo de escalera y lavandería")
-    lab((4.55, 11.6, z + TIN_B + TIN_H), 12.6, ytop - 1.6, "4 tinacos de 1,100 L")
-    lab((4.6, 6.8, z + 0.5), 13.2, ytop - 3.4, "Patio de luz\n(vacío con barandal)")
-    lab((W, 14.0, 1.2), 14.2, ytop - 9.6, "Patio privado\nposterior (PB)")
-    lab((4.65, -0.05, 2 * H + 1.3), 1.0, ytop - 9.3, "Celosía terracota /\nsalvia por nivel", ha="left")
-    lab((2.1, -0.04, H + 1.6), 1.0, ytop - 11.6, "Ventanas de\nherrería negra")
-    lab((1.0, -0.04, 1.2), 1.0, ytop - 14.4, "Puerta de estudio /\nlocal PB")
-    lab((XA + PW / 2, 0.04, 1.4), 4.6, y0 + 1.3, "Reja y pasillo de\nacceso de 1.10 m")
-    lab((W + 3.0, 6.0, 3.0), 14.4, y0 + 2.2, "Vecinos de 1 nivel\n(contexto esquemático)")
+    lab((2.0, 2.0, z + PERG_H + 0.07), -2.2, 1.5, "Terraza común bajo pérgola\ncon 6 paneles solares", ha="right")
+    lab((1.1, 7.0, z + CUBO_H), 0.4, 1.5, "Cubo de escalera y lavandería")
+    lab((5.15, 12.2, z + TIN_B + TIN_H), 1.3, 0.9, "4 tinacos de 1,100 L")
+    lab((4.6, 6.8, z + 0.5), 3.4, 0.2, "Patio de luz\n(vacío con barandal)")
+    lab((W - t / 2, 14.0, BARDA), 2.0, 0.8, "Patio privado\nposterior (PB)")
+    lab((4.65, -0.05, 2 * H + 1.3), -4.3, -0.4, "Celosía terracota /\nsalvia por nivel", ha="right")
+    lab((2.1, -0.04, H + 1.6), -3.6, -1.4, "Ventanas de\nherrería negra", ha="right")
+    lab((1.0, -0.04, 1.2), -2.4, -1.5, "Puerta de estudio /\nlocal PB", ha="right")
+    lab((XA + PW / 2, 0.04, 1.4), -1.2, -2.7, "Reja y pasillo de\nacceso de 1.10 m", ha="right")
+    lab((W + 3.0, 6.0, 3.0), 2.6, -2.4, "Vecinos de 1 nivel\n(contexto esquemático)")
     sh.t(0.5, 24.3, "Vista desde el sureste* · 4 niveles + azotea · sin alberca · block aparente, celosía y "
          "herrería negra", size=5.6, color=GRAY)
     sh.t(0.5, 23.95, "*Orientación por confirmar. Volumetría generada de la misma geometría que plantas y cortes.",

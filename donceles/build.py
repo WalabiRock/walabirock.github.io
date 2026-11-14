@@ -21,7 +21,7 @@ def paso(nombre, fn):
     t = time.time()
     print(f"\n=== {nombre} ===", flush=True)
     r = fn()
-    if r not in (None, 0, True):
+    if r is not None and r != 0:
         print(f"FALLÓ: {nombre}")
         sys.exit(1)
     print(f"--- ok ({time.time() - t:.1f} s)", flush=True)

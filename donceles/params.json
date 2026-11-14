@@ -15,13 +15,28 @@
     "muro_m": 0.15,
     "entrepiso_m": 2.9,
     "pretil_m": 1.1,
-    "estudio_frente_fondo_m": 5.0,
-    "nucleo_fondo_m": 3.6,
+    "estudio_frente_fondo_m": 4.8,
+    "nucleo_fondo_m": 3.95,
     "estudio_trasero_hasta_m": 13.0,
-    "escalera_ancho_m": 2.2,
+    "escalera_ancho_m": 1.9,
     "pasillo_ancho_m": 1.2,
     "pasillo_pb_ancho_m": 1.1,
-    "cuarto_azotea_m2": 15.1
+    "cuarto_azotea_m2": 15.95,
+    "geometria_rev": "arq-v1",
+    "escalera_rampa_ancho_m": 0.9,
+    "escalera_huella_m": 0.28,
+    "escalera_peraltes_por_piso": 16,
+    "losa_m": 0.25,
+    "tabique_bano_m": 0.1,
+    "losa_cimentacion_m": 0.45,
+    "cubo_altura_m": 2.6,
+    "losa_cubo_m": 0.2,
+    "lavanderia_largo_int_m": 3.0,
+    "pergola_altura_m": 2.5,
+    "tinaco_altura_m": 1.4,
+    "tinaco_base_m": 0.5,
+    "cisterna_altura_m": 1.8,
+    "barda_patio_m": 2.4
   },
   "terreno": {
     "oferta_min": 820000,
@@ -849,7 +864,7 @@
     {
       "clave": "5.06",
       "capitulo": "Instalación hidrosanitaria",
-      "concepto": "Cisterna superficial de polietileno 10,000 L (tipo Rotoplas)",
+      "concepto": "Cisterna superficial (provisión con precio de polietileno 10,000 L; solución por definir)",
       "unidad": "pza",
       "cantidad": 1,
       "pu": 55000.0,
@@ -857,7 +872,7 @@
       "fuentes": [
         "F24"
       ],
-      "supuesto": "Listados $49,100–64,350; se asume precio al público con IVA; sin instalación.",
+      "supuesto": "PROVISIÓN. Un tanque de 10,000 L en una pieza no cabe en PB: el plano A-02 muestra una cisterna superficial de ≈4.8 m³ más 4 tinacos (≈9.2 m³ en total). Se conserva el importe hasta definir solución y capacidad con Aguakan.",
       "aplica_indirectos": true,
       "fase": "F5",
       "respaldo": "referencia_no_verificada"
