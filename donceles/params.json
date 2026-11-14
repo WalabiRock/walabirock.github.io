@@ -1,0 +1,504 @@
+{
+  "version": "v1.0 - borrador para revisión",
+  "fecha": "14 de noviembre de 2026",
+  "preparado_por": "Marcel Stillekens Jr.",
+  "revisores": [
+    "Isaac Pachón",
+    "Javier"
+  ],
+  "fecha_inicio": "2026-12-01",
+  "lote": {
+    "frente_m": 6.0,
+    "fondo_m": 15.0
+  },
+  "geometria": {
+    "muro_m": 0.15,
+    "entrepiso_m": 2.9,
+    "pretil_m": 1.1,
+    "estudio_frente_fondo_m": 5.0,
+    "nucleo_fondo_m": 3.6,
+    "estudio_trasero_hasta_m": 13.0,
+    "escalera_ancho_m": 2.2,
+    "pasillo_ancho_m": 1.2,
+    "pasillo_pb_ancho_m": 1.1,
+    "cuarto_azotea_m2": 15.1
+  },
+  "terreno": {
+    "oferta_min": 820000,
+    "oferta_max": 850000,
+    "tope": 900000,
+    "apartado": 50000,
+    "escrituracion_pct": 0.06
+  },
+  "iva": "incluido",
+  "fuentes": [],
+  "partidas": [
+    {
+      "clave": "0.01",
+      "capitulo": "Preliminares",
+      "concepto": "Demolición casa existente y retiro de escombro",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 70000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": true,
+      "fase": "F3"
+    },
+    {
+      "clave": "0.02",
+      "capitulo": "Preliminares",
+      "concepto": "Trazo, limpieza, tapial, bodega y sanitario de obra",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 35000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": true,
+      "fase": "F3"
+    },
+    {
+      "clave": "0.03",
+      "capitulo": "Estudios y proyecto",
+      "concepto": "Mecánica de suelos y topografía",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 25000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": false,
+      "fase": "F2"
+    },
+    {
+      "clave": "0.04",
+      "capitulo": "Estudios y proyecto",
+      "concepto": "Proyecto ejecutivo (arq., estructural, instalaciones), DRO y corresponsables",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 180000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": false,
+      "fase": "F2"
+    },
+    {
+      "clave": "0.05",
+      "capitulo": "Estudios y proyecto",
+      "concepto": "Uso de suelo, licencias, factibilidades y derechos Aguakan / CFE",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 220000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": false,
+      "fase": "F2"
+    },
+    {
+      "clave": "0.06",
+      "capitulo": "Cimentación",
+      "concepto": "Losa de cimentación 90 m² con impermeabilización y bombeo por freático",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 342000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": true,
+      "fase": "F3"
+    },
+    {
+      "clave": "0.07",
+      "capitulo": "Estructura y obra negra",
+      "concepto": "Muros de block aparente, castillos, cadenas, trabes y losas de vigueta y bovedilla (294 m²)",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 1528800,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": true,
+      "fase": "F4"
+    },
+    {
+      "clave": "0.08",
+      "capitulo": "Estructura y obra negra",
+      "concepto": "Escalera de concreto en U (4 niveles)",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 120000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": true,
+      "fase": "F4"
+    },
+    {
+      "clave": "0.09",
+      "capitulo": "Instalaciones",
+      "concepto": "Hidrosanitaria: 8 baños, 8 cocinetas, cisterna 10,000 L e hidroneumático",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 320000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": true,
+      "fase": "F5"
+    },
+    {
+      "clave": "0.10",
+      "capitulo": "Instalaciones",
+      "concepto": "Eléctrica: acometida, 9 medidores, tableros, contactos e iluminación",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 260000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": true,
+      "fase": "F5"
+    },
+    {
+      "clave": "0.11",
+      "capitulo": "Instalaciones",
+      "concepto": "Impermeabilización de azotea y terraza",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 35000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": true,
+      "fase": "F5"
+    },
+    {
+      "clave": "0.12",
+      "capitulo": "Acabados",
+      "concepto": "Piso de concreto pulido con sellador (294 m²)",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 82300,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": true,
+      "fase": "F6"
+    },
+    {
+      "clave": "0.13",
+      "capitulo": "Acabados",
+      "concepto": "Sellado de block aparente interior y exterior",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 72000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": true,
+      "fase": "F6"
+    },
+    {
+      "clave": "0.14",
+      "capitulo": "Acabados",
+      "concepto": "Baños en cemento pulido con sardinel (8)",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 144000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": true,
+      "fase": "F6"
+    },
+    {
+      "clave": "0.15",
+      "capitulo": "Acabados",
+      "concepto": "Muebles de concreto: cama, banca, repisas y barra (8 estudios)",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 176000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": true,
+      "fase": "F6"
+    },
+    {
+      "clave": "0.16",
+      "capitulo": "Acabados",
+      "concepto": "Azulejo 3D de acento (granja propia, precio costo)",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 60000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": true,
+      "fase": "F6"
+    },
+    {
+      "clave": "0.17",
+      "capitulo": "Herrería y cancelería",
+      "concepto": "Ventanas, puertas de acceso, barandal y reja",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 394000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": true,
+      "fase": "F6"
+    },
+    {
+      "clave": "0.18",
+      "capitulo": "Herrería y cancelería",
+      "concepto": "Celosía de fachada (40 m²)",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 56000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": true,
+      "fase": "F6"
+    },
+    {
+      "clave": "0.19",
+      "capitulo": "Herrería y cancelería",
+      "concepto": "Puertas interiores de baño (8)",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 36000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": true,
+      "fase": "F6"
+    },
+    {
+      "clave": "0.20",
+      "capitulo": "Muebles y equipo",
+      "concepto": "Muebles sanitarios, tarjas y llaves (8 juegos)",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 76000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": false,
+      "fase": "F7"
+    },
+    {
+      "clave": "0.21",
+      "capitulo": "Rooftop",
+      "concepto": "Pérgola de acero, piso de terraza y cuarto de lavado",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 145000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": true,
+      "fase": "F6"
+    },
+    {
+      "clave": "0.22",
+      "capitulo": "Muebles y equipo",
+      "concepto": "Equipamiento por estudio: minisplit, ventilador, parrilla, frigobar, calentador y colchón (8)",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 282400,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": false,
+      "fase": "F7"
+    },
+    {
+      "clave": "0.23",
+      "capitulo": "Muebles y equipo",
+      "concepto": "Lavandería de paga: 2 lavadoras y 2 secadoras",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 70000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": false,
+      "fase": "F7"
+    },
+    {
+      "clave": "0.24",
+      "capitulo": "Muebles y equipo",
+      "concepto": "Paneles solares 3 kW para áreas comunes",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 65000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": false,
+      "fase": "F7"
+    },
+    {
+      "clave": "0.25",
+      "capitulo": "Muebles y equipo",
+      "concepto": "Chapas inteligentes, cámaras, buzones, señalética y limpieza final",
+      "unidad": "lote",
+      "cantidad": 1,
+      "pu": 45000,
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "supuesto": "Suma global del borrador v0 (PROVISIONAL, se reemplaza por partidas con cantidad × PU).",
+      "aplica_indirectos": false,
+      "fase": "F7"
+    }
+  ],
+  "indirectos_constructor_pct": 0.12,
+  "contingencia_pct": 0.1,
+  "escalamiento_precios_pct": 0.05,
+  "colchon_meses": 2,
+  "rentas": [
+    [
+      "PB frente (estudio / local)",
+      7500
+    ],
+    [
+      "PB fondo con patio privado",
+      8500
+    ],
+    [
+      "Piso 2 frente",
+      9000
+    ],
+    [
+      "Piso 2 fondo",
+      8000
+    ],
+    [
+      "Piso 3 frente",
+      9000
+    ],
+    [
+      "Piso 3 fondo",
+      8000
+    ],
+    [
+      "Piso 4 frente",
+      9000
+    ],
+    [
+      "Piso 4 fondo",
+      8000
+    ]
+  ],
+  "vacancia_pct": 0.05,
+  "gastos_operacion_pct": 0.15,
+  "lavanderia_mensual": 2500,
+  "escenarios": {
+    "optimista": {
+      "terreno_precio": 820000,
+      "escrituracion_pct": 0.06,
+      "factor_costo_directo": 0.95,
+      "factor_renta": 1.05,
+      "vacancia_pct": 0.03,
+      "gastos_operacion_pct": 0.13,
+      "retraso_meses": 0
+    },
+    "base": {
+      "terreno_precio": 850000,
+      "escrituracion_pct": 0.06,
+      "factor_costo_directo": 1.0,
+      "factor_renta": 1.0,
+      "vacancia_pct": 0.05,
+      "gastos_operacion_pct": 0.15,
+      "retraso_meses": 0
+    },
+    "conservador": {
+      "terreno_precio": 900000,
+      "escrituracion_pct": 0.06,
+      "factor_costo_directo": 1.12,
+      "factor_renta": 0.92,
+      "vacancia_pct": 0.1,
+      "gastos_operacion_pct": 0.18,
+      "retraso_meses": 3
+    }
+  },
+  "sensibilidad": {
+    "costo_pct": [
+      -0.15,
+      0.0,
+      0.15
+    ],
+    "renta_pct": [
+      -0.1,
+      0.0,
+      0.1
+    ]
+  },
+  "fases": [
+    [
+      "F0",
+      "Verificación y apartado",
+      0,
+      1,
+      "Constancia de uso de suelo favorable y libertad de gravamen"
+    ],
+    [
+      "F1",
+      "Compra del terreno",
+      1,
+      2,
+      "Firma de escritura"
+    ],
+    [
+      "F2",
+      "Proyecto ejecutivo y licencias",
+      2,
+      5,
+      "Licencia de construcción emitida"
+    ],
+    [
+      "F3",
+      "Demolición y cimentación",
+      5,
+      7,
+      "Losa de cimentación colada y aprobada por DRO"
+    ],
+    [
+      "F4",
+      "Estructura y obra negra",
+      7,
+      11,
+      "Losa de azotea colada"
+    ],
+    [
+      "F5",
+      "Instalaciones y obra gris",
+      10,
+      13,
+      "Pruebas hidráulicas y eléctricas aprobadas"
+    ],
+    [
+      "F6",
+      "Acabados, herrería y rooftop",
+      12,
+      15,
+      "Acta de revisión de acabados por estudio"
+    ],
+    [
+      "F7",
+      "Equipamiento y entrega",
+      15,
+      16,
+      "Acta de entrega-recepción y planos as-built"
+    ]
+  ],
+  "retencion_garantia_pct": 0.05,
+  "retencion_liberacion_dias": 60
+}
