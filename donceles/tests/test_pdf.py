@@ -13,7 +13,7 @@ Qué comprueba
     2. Todas las fuentes incrustadas (pdffonts: emb = yes).
     3. Ninguna palabra a menos de 22 pt (≈ 8 mm) del borde de su página.
     4. Ninguna palabra encimada con otra (texto que se sale de su celda o se recorta).
-    5. Nota de pie y «Página N de M» correctos en todas las páginas menos la portada.
+    5. Nota de pie, versión y «Página N de M» correctos en todas las páginas, portada incluida.
     6. Las 14 secciones presentes y en orden (la portada, por el nombre del proyecto).
     7. El resumen ejecutivo ocupa exactamente una página.
     8. Ninguna cifra de dinero abreviada («$5.7 M», «$800 mil», «$35 k»), salvo las que son
@@ -138,8 +138,6 @@ def revisar(pdf):
 
     # 5. pie de página
     for i, t in enumerate(textos, 1):
-        if i == 1:
-            continue
         if NOTA_PIE not in t:
             falla(f"pág. {i}: falta la nota de pie")
         m = re.search(r"Página (\d+) de (\d+)", t)
@@ -154,8 +152,6 @@ def revisar(pdf):
     if "Proyecto Donceles" not in textos[0].replace("Proyecto Donceles".replace(" ", "\n"), "Proyecto Donceles") \
             and not ("Proyecto" in textos[0] and "Donceles" in textos[0]):
         falla("la portada no muestra el nombre del proyecto")
-    if re.search(r"Página \d+ de \d+", textos[0]):
-        falla("la portada no debe llevar pie de página")
     primera, previa = {}, 1
     for k, tit in enumerate(SECCIONES[1:], 2):
         pags = [i for i, t in enumerate(textos, 1) if f"{k} · {tit}" in t]

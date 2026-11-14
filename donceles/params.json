@@ -1815,7 +1815,7 @@
         "factor_costo_directo": "Refuerzo estructural, aportación CFE y parte alta del paramétrico de Cancún.",
         "factor_renta": "Salario base de servicio ≈$9,000–9,500; techo de pago del inquilino objetivo.",
         "vacancia_pct": "≈36 días por unidad al año; rotación alta.",
-        "opex_pct": "Administración externa (8–10 %) más mantenimiento.",
+        "opex_pct": "Administración externa (8–10 %) más mantenimiento (ESTIMADO).",
         "retraso_meses": "Licencia y conexiones lentas; lluvias (4 meses)."
       }
     }
@@ -1887,12 +1887,12 @@
       "Equipamiento y entrega",
       15,
       16,
-      "Acta de entrega-recepción y planos as-built"
+      "Acta de entrega-recepción y planos de obra terminada"
     ]
   ],
   "retencion_garantia_pct": 0.05,
   "retencion_liberacion_dias": 60,
-  "nota_verificacion_precios": "Ninguna página pudo abrirse en esta sesión (red restringida: solo funcionó el buscador). Por eso todas las fuentes llevan verificada=false y todas las partidas quedan como ESTIMADO; el campo 'respaldo' distingue las que tienen una referencia publicada sin verificar de las que son regla práctica.",
+  "nota_verificacion_precios": "Ninguna página pudo abrirse en esta sesión (red restringida: solo funcionó el buscador). Por eso todas las fuentes llevan «no verificada» y todas las partidas quedan como ESTIMADO; el campo 'respaldo' distingue las que tienen una referencia publicada sin verificar de las que son regla práctica.",
   "rentas_mercado": {
     "resumen": "Anuncios 2026 (rentas pedidas, no cerradas; páginas no abiertas): estudio SM 62 $9,800; estudio SM 39 $10,000; estudio amueblado cerca de Mercado 28 $11,000 con agua e internet; estudio céntrico amueblado $6,600; estudios de 25 m² en SM 96 ≈$5,800. No se halló ningún estudio anunciado en SM 64. Las rentas v0 de $7,500–9,000 quedan en la mitad del rango y son plausibles para producto nuevo, pero el salario base de un trabajador de servicios (≈$9,000–9,500/mes) marca el techo de pago: se recomienda no subir el escenario base y probar −10 % en el conservador. Vacancia de renta de largo plazo en Cancún: sin dato publicado encontrado (ESTIMADO 5 %). Predial: tasa de 2.8 al millar en una versión no confirmada de la ley, con 15 % de descuento por pago en enero.",
     "fuentes": [

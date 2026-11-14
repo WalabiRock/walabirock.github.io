@@ -30,7 +30,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.pdfmetrics import registerFontFamily, stringWidth
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas as _canvas
-from reportlab.platypus import (BaseDocTemplate, Flowable, Frame, Image,
+from reportlab.platypus import (BaseDocTemplate, CondPageBreak, Flowable, Frame, Image,
                                 KeepTogether, NextPageTemplate, PageBreak, PageTemplate,
                                 Paragraph, Spacer, Table, TableStyle)
 from reportlab.platypus.tableofcontents import TableOfContents
@@ -44,7 +44,7 @@ RENDERS = os.path.join(AQUI, "renders")
 
 PROYECTO = "Proyecto Donceles"
 SUBTITULO = "8 estudios en renta de largo plazo"
-DIRECCION = "Donceles 28, SM 64, Cancún, Quintana Roo"
+DIRECCION = "Col. Donceles 28, SM 64, Cancún, Quintana\u00a0Roo"
 NOTA_PIE = "Documento preliminar, sujeto a constancia de uso de suelo, proyecto ejecutivo y DRO."
 
 SECCIONES = [
@@ -397,16 +397,28 @@ class Lienzo(_canvas.Canvas):
         total = len(self._pags)
         for i, st in enumerate(self._pags):
             self.__dict__.update(st)
-            if not self._portada:
-                self._marco(i + 1, total)
+            self._marco(i + 1, total, cabecera=not self._portada)
             super().showPage()
         super().save()
 
-    def _marco(self, n, total):
+    def _marco(self, n, total, cabecera=True):
         w, h = self._pagesize
         mx = MARGEN if w < h else 36.0
         mx = min(mx, MARGEN)
         self.saveState()
+        if cabecera:
+            self._cabecera(mx, w, h)
+        self.setStrokeColor(CONCRETO)
+        self.setLineWidth(0.5)
+        self.line(mx, 37, w - mx, 37)
+        self.setFillColor(GRIS)
+        self.setFont(FI, 6.3)
+        self.drawString(mx, 27, NOTA_PIE)
+        self.setFont(F, 6.8)
+        self.drawRightString(w - mx, 27, f"{self._ver}  ·  {self._fecha}  ·  Página {n} de {total}")
+        self.restoreState()
+
+    def _cabecera(self, mx, w, h):
         self.setFillColor(TINTA)
         self.setFont(FB, 7.5)
         self.drawString(mx, h - 29, PROYECTO.upper())
@@ -418,15 +430,6 @@ class Lienzo(_canvas.Canvas):
         self.line(mx, h - 35, w - mx, h - 35)
         self.setFillColor(TERRACOTA)
         self.rect(mx, h - 36.6, 46, 1.6, stroke=0, fill=1)
-        self.setStrokeColor(CONCRETO)
-        self.setLineWidth(0.5)
-        self.line(mx, 37, w - mx, 37)
-        self.setFillColor(GRIS)
-        self.setFont(FI, 6.3)
-        self.drawString(mx, 27, NOTA_PIE)
-        self.setFont(F, 6.8)
-        self.drawRightString(w - mx, 27, f"{self._ver}  ·  {self._fecha}  ·  Página {n} de {total}")
-        self.restoreState()
 
 
 class Doc(BaseDocTemplate):
@@ -580,9 +583,6 @@ def _portada(ctx):
                 _, ph = par.wrap(ancho_txt, 80)
                 par.drawOn(c, m, yy - ph)
                 yy -= ph + 11
-        c.setFont(FI, 6.8)
-        c.setFillColor(GRIS)
-        c.drawString(m, 60, NOTA_PIE)
         c.restoreState()
 
     return dibujar
@@ -648,7 +648,8 @@ def sec_resumen(ctx):
         f"({fecha_larga(H['fecha_liberacion'])})."))
     s.append(caja([
         p("<b>La condición crítica: constancia de uso de suelo favorable antes de comprar.</b>", "cuerpo"),
-        p(f"El Programa de Desarrollo Urbano (PDU) 2022 de Benito Juárez fue anulado por un tribunal federal, así que la "
+        p(f"El Programa de Desarrollo Urbano (PDU) 2022 de Benito Juárez fue anulado por un tribunal federal (dato del "
+          f"encargo, por documentar), así que la "
           f"zonificación aplicable al lote es incierta: no se sabe todavía si se permiten cuatro niveles y "
           f"{len(P['rentas'])} viviendas. Hasta que el municipio emita una constancia de uso de suelo favorable no se paga "
           f"nada más allá del apartado de {money(apartado)} ({EST()}) y de los estudios de la fase "
@@ -665,8 +666,9 @@ def sec_resumen(ctx):
         f"{anios(c['recuperacion_anios'])} de recuperación."))
     s.append(p(
         f"<b>Qué tan firmes son los números.</b> El {pct(share)} del costo directo ({money(pres['importe_estimado'])} de "
-        f"{money(pres['directo'])}; {n_est} de {n_tot} partidas) son precios unitarios {EST()}: ninguna fuente de precios "
-        f"pudo abrirse y verificarse. Por eso este documento se entrega a {e(ctx.revisores)} con partidas numeradas, el "
+        f"{money(pres['directo'])}; {n_est} de {n_tot} partidas) corresponde a precios unitarios con la etiqueta "
+        f"{EST()}, que en este documento marca toda cifra sin fuente verificada: ninguna fuente de precios pudo abrirse. "
+        f"Por eso este documento se entrega a {e(ctx.revisores)} con partidas numeradas, el "
         f"supuesto junto a cada cifra y una hoja de observaciones al final."))
     return s
 
@@ -684,6 +686,8 @@ def sec_programa(ctx):
         f"{num(G['entrepiso_m'], 2)}{NB}m y muros de block de {num(G['muro_m'] * 100, 0)}{NB}cm."))
     kwp = next((f for f in ctx.c["presupuesto"]["filas"] if f["unidad"] == "kWp"), None)
     solar = f"paneles solares de {num(kwp['cantidad_num'], 0)}{NB}kWp" if kwp else "paneles solares"
+    lav_int = g.get("lavanderia_int_m2")
+    lav = f"; lavandería {m2(lav_int)} interiores" if lav_int else ""
     prog = [["Nivel", "Programa", "Notas"],
             ["Piso 1 (PB)",
              f"Estudio de frente y estudio de fondo con patio privado ({m2(g['patio_post_m2'])}).",
@@ -694,13 +698,13 @@ def sec_programa(ctx):
              f"Núcleo abierto: escalera en U de {num(G['escalera_ancho_m'], 2)}{NB}m de ancho total, pasillo de "
              f"{num(G['pasillo_ancho_m'], 2)}{NB}m y patio de luz. Sin elevador."],
             [f"Piso {niveles + 1} (rooftop)",
-             f"Terraza común bajo pérgola de acero ({m2(g['terraza_m2'])}), lavandería de paga "
-             f"({m2(g['cuarto_azotea_m2'])}), tinacos y {solar}.",
+             f"Terraza común bajo pérgola de acero ({m2(g['terraza_m2'])}), cubo de escalera y lavandería de paga "
+             f"({m2(g['cuarto_azotea_m2'])} construidos{lav}), tinacos y {solar}.",
              "Sin alberca. Uso común de los inquilinos."],
             ["Cada estudio",
              "Cama, banca, repisas y barra de cocineta de concreto colado; baño de cemento pulido con regadera abierta.",
              "Renta de largo plazo únicamente (sin Airbnb ni cowork). Sin sótano ni cisterna enterrada."]]
-    s.append(tabla(prog, [78, 204, 230], tam=8, nombre="programa"))
+    s.append(tabla(prog, [78, 204, 230], nombre="programa"))
     s.append(p("Cuadro de áreas", "h2"))
     s.append(p("Todas las áreas salen de la geometría de <b>drawings.py</b> (la misma que dibuja los planos), no de una tabla "
                "aparte: si cambia un plano, cambia este cuadro y cambia el presupuesto.", "chico"))
@@ -715,11 +719,12 @@ def sec_programa(ctx):
     cub4 = niveles * g["planta_cubierta_m2"]
     filas.append(fila(f"Planta cubierta por nivel (pisos 1 a {niveles})", g["planta_cubierta_m2"], niveles, cub4,
                       "Polígono de la planta a paños exteriores, sin patio de luz."))
-    filas.append(fila("Cuarto de azotea (lavandería)", g["cuarto_azotea_m2"], 1, g["cuarto_azotea_m2"],
-                      "Polígono del cuarto en la planta de rooftop."))
+    filas.append(fila("Cubo de escalera y lavandería en azotea", g["cuarto_azotea_m2"], 1, g["cuarto_azotea_m2"],
+                      "Polígono construido en la planta de rooftop"
+                      + (f" (lavandería {m2(lav_int)} interiores)." if lav_int else ".")))
     suma_cub = cub4 + g["cuarto_azotea_m2"]
-    como = (f"{niveles} plantas + cuarto de azotea." if abs(suma_cub - g["total_cubierto_m2"]) < 0.05 else
-            f"Valor de la geometría de planos ({niveles} plantas + cuarto de azotea dan {m2(suma_cub)}).")
+    como = (f"{niveles} plantas + cubo de escalera y lavandería." if abs(suma_cub - g["total_cubierto_m2"]) < 0.05 else
+            f"Valor de la geometría de planos ({niveles} plantas + cubo y lavandería dan {m2(suma_cub)}).")
     filas.append(fila("Total cubierto (construcción)", None, None, g["total_cubierto_m2"], como, b=True))
     i_tot = len(filas) - 1
     unidades = [("Estudio PB frente, interior", g["estudio_pb_frente_int_m2"], 1),
@@ -735,9 +740,11 @@ def sec_programa(ctx):
     filas.append(fila("Total rentable interior", None, None, g["rentable_int_m2"], como, b=True))
     i_rent = len(filas) - 1
     filas.append(fila("Áreas comunes por planta (escalera y pasillo)", g["comunes_planta_m2"], niveles,
-                      niveles * g["comunes_planta_m2"], "Polígono del núcleo cubierto en cada planta."))
+                      niveles * g["comunes_planta_m2"],
+                      f"Polígono del núcleo cubierto en cada planta. En PB hay además el pasillo lateral de acceso de "
+                      f"{num(G['pasillo_pb_ancho_m'], 2)}{NB}m, que no se suma aquí."))
     filas.append(fila("Terraza común de rooftop", g["terraza_m2"], 1, g["terraza_m2"],
-                      "Azotea menos cuarto de azotea; abierta, no cuenta como cubierta."))
+                      "Azotea menos cubo de escalera y lavandería; abierta, no cuenta como cubierta."))
     filas.append(fila("Patio de luz", g["patio_luz_m2"], 1, g["patio_luz_m2"], "Vacío del núcleo; abierto, no cuenta como cubierto."))
     filas.append(fila("Patio posterior privado (PB fondo)", g["patio_post_m2"], 1, g["patio_post_m2"],
                       "Franja del fondo del lote; abierta."))
@@ -747,20 +754,24 @@ def sec_programa(ctx):
     if "cos_desplante" in g:
         cos, cos_txt = g["cos_desplante"], "Huella de desplante ÷ lote, como en el plano de sitio."
         if "huella_desplante_m2" in g:
-            cos_txt = f"Huella de desplante ({m2(g['huella_desplante_m2'])}) ÷ lote, como en el plano de sitio."
+            cos_txt = f"Huella de desplante ({m2(g['huella_desplante_m2'])}) ÷ lote."
     else:
         cos, cos_txt = g["planta_cubierta_m2"] / g["lote_m2"], "Planta cubierta ÷ lote."
     filas.append(["Ocupación del lote (COS)", "", "", pct(cos, 1),
-                  cos_txt + " Límite por confirmar con la constancia de uso de suelo."])
+                  cos_txt + " Límite por confirmar."])
     filas.append(["Intensidad (CUS)", "", "", f"{g.get('cus', g['total_cubierto_m2'] / g['lote_m2']):.2f}",
-                  "Total cubierto ÷ lote. Límite por confirmar con la constancia de uso de suelo."])
-    filas.append(["Altura máxima", "", "", f"{num(g['altura_max_m'], 2)}{NB}m",
-                  "Nivel de banqueta a punto más alto del edificio. Límite por confirmar."])
+                  "Total cubierto ÷ lote. Límite por confirmar."])
+    otras = [f"{nom} {num(g[k], 2)}{NB}m" for k, nom in (("altura_pretil_m", "pretil de azotea"),
+                                                          ("altura_tinacos_m", "tinacos")) if k in g]
+    filas.append(["Altura al punto más alto (cubo de escalera)", "", "", f"{num(g['altura_max_m'], 2)}{NB}m",
+                  ("Otras alturas: " + "; ".join(otras) + ". " if otras else "") +
+                  "Niveles como en cortes y fachadas. Límite por confirmar."])
     s.append(tabla(filas, [172, 58, 30, 62, 190], aline="lrcrl", nombre="areas",
                    extra=[("BACKGROUND", (0, i_tot), (-1, i_tot), T_SALVIA),
                           ("BACKGROUND", (0, i_rent), (-1, i_rent), T_SALVIA)]))
     s.append(Spacer(1, 4))
-    s.append(p("Tolerancia de verificación: las áreas de este cuadro deben coincidir dentro de ±2 % con los polígonos de los "
+    s.append(p("Los límites de COS, CUS y altura se confirman con la constancia de uso de suelo. "
+               "Tolerancia de verificación: las áreas de este cuadro deben coincidir dentro de ±2 % con los polígonos de los "
                "planos (prueba automática <b>tests/test_areas.py</b>). Las áreas son de anteproyecto; el levantamiento "
                "topográfico del lote puede moverlas.", "nota"))
     return s
@@ -885,19 +896,34 @@ def _cuadro_generico(rows):
 def sec_especificaciones(ctx):
     g = ctx.g
 
+    filas_p = ctx.c["presupuesto"]["filas"]
+
+    def del_cap(cap, patron=None, excluir=None):
+        """Claves de un capítulo (así entran solas las partidas nuevas), con filtro opcional."""
+        return [str(f["clave"]) for f in filas_p if f["capitulo"] == cap
+                and (not patron or re.search(patron, f["concepto"], re.I))
+                and (not excluir or not re.search(excluir, f["concepto"], re.I))]
+
     def spec(intro, claves):
         partes = [intro] if intro else []
+        vistos = []
         for k in claves:
+            if k in vistos:
+                continue
+            vistos.append(k)
             t = ctx.con(k)
             if t:
                 partes.append(f'<font color="{HEX_GRIS}">{k}</font> {e(t)}.')
         return [p(x, "c") for x in partes]
 
     PD = "Por definir en proyecto ejecutivo"
+    losa_m = ctx.P["geometria"].get("losa_cimentacion_m")
+    losa_txt = f" de {num(losa_m, 2)}{NB}m, como en los cortes" if losa_m else ""
     sistemas = [
         ("Cimentación",
-         spec("Losa de cimentación superficial; sin sótano y sin cisterna enterrada.", ["3.03", "3.05", "3.06", "3.07"]),
-         "El nivel freático está a ≈ −0.75 m: una losa corrida evita excavar bajo el agua, reduce el bombeo y reparte la "
+         spec("Losa de cimentación superficial" + losa_txt + "; sin sótano y sin cisterna enterrada.",
+              ["3.01", "3.03", "3.05", "3.06", "3.07"]),
+         "El nivel freático está a ≈ −0.75 m (dato del encargo, por confirmar con mecánica de suelos): una losa corrida evita excavar bajo el agua, reduce el bombeo y reparte la "
          "carga de cuatro niveles. La barrera de vapor y el aditivo protegen el concreto de la humedad permanente.",
          "Espesor, armado y mejoramiento, según el estudio de mecánica de suelos. Días reales de bombeo. Precio del "
          "concreto puesto en obra."),
@@ -908,7 +934,8 @@ def sec_especificaciones(ctx):
          "El estructurista debe confirmar que el block de 15 cm confinado resiste cuatro niveles más azotea (incluido "
          "viento de huracán) o definir columnas o muros de concreto en planta baja."),
         ("Muros",
-         spec("Block aparente sellado, sin aplanado ni pintura.", ["4.01", "7.02"]),
+         spec("Block aparente sellado, sin aplanado ni pintura.",
+              ["4.01", "7.02"] + del_cap("Estructura y albañilería", r"barda")),
          "Se ahorran aplanados y repintados; el sellador hidrofugante protege de la lluvia y la humedad sin ocultar el "
          "material.",
          "Calidad del block y de la junta para dejarlo aparente. Tipo de sellador y cada cuánto se renueva. Cantidad real "
@@ -927,11 +954,11 @@ def sec_especificaciones(ctx):
          "Sin azulejo ni cancel: menos piezas que se rompen o se despegan con la humedad.",
          "Sistema impermeable del cemento pulido, pendientes y coladeras. Ventilación de cada baño."),
         ("Mobiliario de concreto",
-         spec("Colado en sitio junto con la obra.", ["9.01", "9.02", "9.03", "9.04", "9.05"]),
+         spec("Colado en sitio junto con la obra.", del_cap("Muebles de concreto y carpintería")),
          "No se hincha con la humedad, no lo ataca la termita y no hay que reponerlo entre inquilinos.",
          "Dimensiones, armado y acabado de cada pieza. Colchón y ergonomía de la base de cama."),
         ("Cancelería",
-         spec("Acero negro.", ["8.01", "8.02", "8.03", "8.08"]),
+         spec("Acero negro.", ["8.01"] + del_cap("Herrería, cancelería y celosía", r"puerta|mosquitero")),
          "La fabrica un herrero local y define la imagen del edificio. Es el punto débil frente a la brisa salina: "
          "necesita buena protección anticorrosiva.",
          "Primario y esmalte (o galvanizado) adecuados para ambiente salino; alternativa en aluminio negro. Vidrio y "
@@ -949,7 +976,7 @@ def sec_especificaciones(ctx):
          "cisterna."),
         ("Rooftop",
          spec("Terraza común bajo pérgola de acero, lavandería de paga, tinacos y paneles solares.",
-              ["10.01", "10.03", "10.04", "11.08", "11.09"]),
+              del_cap("Rooftop") + ["11.08", "11.09"]),
          "Área común que sustituye metros dentro de cada estudio; la lavandería genera un ingreso adicional.",
          "Diseño de la pérgola y de la base de tinacos (peso del agua sobre la losa). Anclajes ante viento de huracán."),
         ("Azulejo 3D (opcional)",
@@ -959,7 +986,8 @@ def sec_especificaciones(ctx):
     ]
     s = titulo_seccion(5, "Lenguaje: brutalismo tropical de bajo costo. Cada peso debe rentar o evitar un riesgo. Las "
                           "especificaciones vienen de las partidas del presupuesto (clave en gris); lo que no aparece aquí "
-                          "está por definir en el proyecto ejecutivo.")
+                          "está por definir en el proyecto ejecutivo. Los hechos del sitio (nivel freático, ambiente "
+                          "salino) son datos del encargo, por documentar.")
     filas = [["Sistema", "Especificación (partidas)", "Por qué: costo y durabilidad en el clima de Cancún",
               "Qué deben confirmar los revisores"]]
     for nom, esp, porque, conf in sistemas:
@@ -969,15 +997,41 @@ def sec_especificaciones(ctx):
 
 
 # ───────────────────────────── 6. presupuesto ─────────────────────────────
+IVA_TXT = ("Los precios se presupuestan con IVA incluido y el modelo supone, de forma conservadora, que ese IVA no se "
+           "recupera. Si la renta misma causa IVA está <b>por confirmar con contador</b>: la exención de la renta de casa "
+           "habitación (Ley del IVA, art. 20, fracc. II; cita no verificada) no aplica a inmuebles que se rentan "
+           "amueblados, y los estudios se entregan con colchón, frigobar, parrilla y minisplit. Si la renta causara el "
+           "16\u00a0% de IVA, la renta neta cambiaría; el modelo no lo considera.")
+
+
 def _cant(f):
     q = f["cantidad_num"]
     return num(q, 0) if abs(q - round(q)) < 1e-9 else num(q, 2)
 
 
+def _sin_indirectos(pres):
+    """Describe las partidas con aplica_indirectos = false: capítulos completos y partidas sueltas."""
+    caps, sueltas = [], []
+    for i, cap in enumerate(pres["capitulos"], 1):
+        fs = [f for f in pres["filas"] if f["capitulo"] == cap]
+        fuera = [f for f in fs if not f.get("aplica_indirectos", True)]
+        if fuera and len(fuera) == len(fs):
+            caps.append(f"{i} ({e(cap)})")
+        else:
+            sueltas += [f"{e(f['clave'])} ({e(f['concepto'])})" for f in fuera]
+    partes = []
+    if caps:
+        partes.append(("los capítulos " if len(caps) > 1 else "el capítulo ") + ", ".join(caps))
+    if sueltas:
+        partes.append(("las partidas " if len(sueltas) > 1 else "la partida ") + ", ".join(sueltas))
+    return " y ".join(partes) or "ninguna"
+
+
 def sec_presupuesto(ctx):
     P, c, g = ctx.P, ctx.c, ctx.g
     pres = c["presupuesto"]
-    s = titulo_seccion(6, f"Escenario base. Precios con IVA incluido. Importe = cantidad × precio unitario (P.U.), redondeado "
+    s = titulo_seccion(6, f"Escenario base. Precios con IVA incluido, que el modelo supone no recuperable (tratamiento fiscal por confirmar "
+                          f"con contador; ver secciones 11 y 13). Importe = cantidad × precio unitario (P.U.), redondeado "
                           f"a pesos. «Estado» indica si el P.U. viene de una fuente verificada (FUENTE) o es {EST()}. "
                           f"El supuesto de cada partida está en la tabla «Supuestos por partida», más adelante.")
     anchos = [30, 202, 42, 46, 56, 62, 46, 28]
@@ -1020,8 +1074,8 @@ def sec_presupuesto(ctx):
 
     add("Costo directo de obra (partidas)", f"Suma de las {len(pres['filas'])} partidas.", pres["directo"])
     add(f"Indirectos y utilidad del constructor, {pct(P['indirectos_constructor_pct'])}",
-        f"Sobre {money(pres['base_indirectos'])}: solo partidas de obra que ejecuta el constructor (no estudios, "
-        f"licencias, equipamiento ni derechos). {EST()}", c["indirectos"])
+        f"Sobre {money(pres['base_indirectos'])}: solo partidas de obra que ejecuta el constructor. Quedan fuera las "
+        f"partidas marcadas sin indirectos: {_sin_indirectos(pres)}. {EST()}", c["indirectos"])
     add("Subtotal de obra", "Costo directo + indirectos.", c["subtotal_obra"], "sub")
     add("Terreno", f"Precio del escenario base (oferta de {money(P['terreno']['oferta_min'])} a "
         f"{money(P['terreno']['oferta_max'])}; tope {money(P['terreno']['tope'])}).", c["terreno"])
@@ -1043,7 +1097,10 @@ def sec_presupuesto(ctx):
     for r, tipo in marca.items():
         extra.append(("BACKGROUND", (0, r), (-1, r), T_SALVIA if tipo == "tot" else T_CONCRETO))
     blo.append(tabla(filas, [176, 256, 80], aline="llr", tam=8, extra=extra, nombre="integracion"))
-    blo.append(Spacer(1, 8))
+    s.append(Spacer(1, 4))
+    s.append(KeepTogether(blo))
+    s.append(Spacer(1, 8))
+    blo = []
     a = g["total_cubierto_m2"]
     filas = [["Costo por m² cubierto", "Cálculo", "Importe por m²"],
              ["Costo directo", f"{money(pres['directo'])} ÷ {m2(a)}", money(c["costo_directo_m2"])],
@@ -1051,11 +1108,11 @@ def sec_presupuesto(ctx):
              ["Inversión total (con terreno y reservas)", f"{money(c['inversion_total'])} ÷ {m2(a)}",
               f"<b>{money(c['inversion_m2'])}</b>"]]
     blo.append(tabla(filas, [176, 256, 80], aline="llr", tam=8, nombre="costo_m2"))
-    s.append(Spacer(1, 4))
     s.append(KeepTogether(blo))
 
     # ── supuestos por partida ──
-    s.append(PageBreak())
+    s.append(Spacer(1, 10))
+    s.append(CondPageBreak(220))
     s.append(Marca(toc=(1, "Supuestos por partida")))
     s.append(p("Supuestos por partida", "h2"))
     s.append(p("Cada número del presupuesto con su supuesto y sus fuentes (los identificadores F01, F02… remiten a la "
@@ -1074,7 +1131,7 @@ def sec_presupuesto(ctx):
         r = f.get("respaldo", "")
         filas.append([e(f["clave"]), e(f["concepto"]), sup, e(resp.get(r, r.replace("_", " ").capitalize())),
                       e(", ".join(f.get("fuentes") or []) or "—")])
-    s.append(tabla(filas, [30, 140, 236, 60, 46], zebra=True, nombre="supuestos"))
+    s.append(tabla(filas, [30, 120, 256, 60, 46], zebra=True, nombre="supuestos"))
     return s
 
 
@@ -1147,6 +1204,9 @@ def sec_escenarios(ctx):
 def _dro(txt):
     """Retoques tipográficos a textos que vienen de cronograma.py («dro», «5%»)."""
     txt = re.sub(r"\bdro\b", "DRO", txt)
+    txt = txt.replace("planos as-built", "planos de obra terminada").replace("as-built", "de obra terminada")
+    txt = txt.replace("obra con indirectos + sus indirectos", "partidas con indirectos, más sus indirectos")
+    txt = re.sub(r"\b([Ss])ólo\b", r"\1olo", txt)
     return re.sub(r"(\d)%", "\\1" + NB + "%", txt)
 
 
@@ -1216,7 +1276,7 @@ def sec_cronograma(ctx):
     for f in Fb:
         d = f["duracion_meses"]
         filas.append([f"<b>{e(f['clave'])}</b>", e(f["nombre"]), e(f["fecha_inicio_txt"]), e(f["fecha_fin_txt"]),
-                      f"{d} {'mes' if d == 1 else 'meses'}", e(f["dependencias_txt"]), e(f["entregable"]),
+                      f"{d} {'mes' if d == 1 else 'meses'}", e(f["dependencias_txt"]), e(_dro(f["entregable"])),
                       e(_dro(f["hito_pago"]))])
     filas.append(["", "<b>Entrega</b>", "", f"<b>{e(H['fecha_entrega_txt'])}</b>", f"{H['mes_entrega']} meses", "", "",
                   f"Liberación del fondo de garantía: {e(H['fecha_liberacion_txt'])}."])
@@ -1224,15 +1284,19 @@ def sec_cronograma(ctx):
                    extra=[("BACKGROUND", (0, len(filas) - 1), (-1, len(filas) - 1), T_SALVIA)]))
     s.append(Spacer(1, 3))
     s.append(p("Dependencias: «fin-comienzo» significa que la fase arranca cuando termina la anterior; «comienzo-comienzo» "
-               "con desfase, que se traslapa con ella. Los traslapes son un supuesto por confirmar con el constructor.", "nota"))
+               "con desfase, que se traslapa con ella. Los traslapes son un supuesto por confirmar con el constructor. La duración de F0 "
+               "es un supuesto optimista: constancia, gravamen, factibilidades y mecánica de suelos en un mes; el retraso del "
+               "escenario conservador se reparte en la obra, no en F0 ni F2.", "nota"))
     os.makedirs(OUT, exist_ok=True)
     gantt = cronograma.grafica_gantt(P, c, os.path.join(OUT, "gantt.png"), False)
     flujo = cronograma.grafica_flujo(P, c, os.path.join(OUT, "curva_flujo.png"), False)
-    s.append(KeepTogether([p("Diagrama de Gantt", "h2"), imagen(gantt, ANCHO, 330)]))
+    s.append(PageBreak())
+    s.append(p("Diagrama de Gantt", "h2"))
+    s.append(imagen(gantt, ANCHO, 292))
     fl = cronograma.flujo_mensual(P, c)
     s.append(KeepTogether([
         p("Flujo de efectivo mensual y curva acumulada", "h2"),
-        imagen(flujo, ANCHO, 370),
+        imagen(flujo, ANCHO, 300),
         Spacer(1, 3),
         p(f"El pico de capital comprometido es de {money(fl['pico']['importe'])} en {e(modelo.mes_txt(P, fl['pico']['mes']))}, "
           f"justo antes de devolver el colchón; supone que las reservas se usan completas. Cada fase se reparte en partes "
@@ -1270,15 +1334,15 @@ def sec_rentas(ctx):
     add("− Gastos de operación", lambda x: "−" + money(C[x]["gastos_op"]),
         f"{por_esc('gastos_operacion_pct')} del ingreso efectivo: predial, mantenimiento, áreas comunes, seguro y "
         f"reposiciones. {EST()}")
-    add("Renta neta mensual (NOI)", lambda x: money(C[x]["neto_mensual"]), "", b=True, fondo=True)
-    add("Renta neta anual (NOI)", lambda x: money(C[x]["neto_anual"]), "12 × renta neta mensual.", b=True)
+    add("Renta neta de operación, mensual", lambda x: money(C[x]["neto_mensual"]), "", b=True, fondo=True)
+    add("Renta neta de operación, anual", lambda x: money(C[x]["neto_anual"]), "12 × renta neta mensual.", b=True)
     add("Inversión total", lambda x: money(C[x]["inversion_total"]), "Ver secciones 6 y 7.")
     add("Rendimiento neto", lambda x: pct(C[x]["rendimiento_neto"], 1), "Renta neta anual ÷ inversión total.", b=True, fondo=True)
     add("Rendimiento sobre inversión base", lambda x: pct(C[x]["rendimiento_sobre_base"], 1),
         "Si no se usan contingencia ni escalamiento.")
     add("Recuperación simple", lambda x: anios(C[x]["recuperacion_anios"]),
         "Inversión total ÷ renta neta anual, contada desde la entrega.", b=True)
-    s.append(tabla(filas, [136, 66, 66, 70, 174], aline="lrrrl", tam=8, nombre="rentas",
+    s.append(tabla(filas, [136, 66, 66, 70, 174], aline="lrrrl", nombre="rentas",
                    extra=[("BACKGROUND", (0, r), (-1, r), T_SALVIA) for r in marca] +
                          [("LINEABOVE", (0, len(P["rentas"]) + 1), (-1, len(P["rentas"]) + 1), 0.6, TINTA)]))
     # sensibilidad
@@ -1350,9 +1414,10 @@ def sec_riesgos(ctx):
          "Constancia de uso de suelo favorable, con alineamiento y número oficial, que diga niveles, densidad, COS, CUS y "
          "remetimientos. Sin ella no se compra.",
          "Inversionista, con gestor local", antes_compra),
-        (f"Altura del edificio ≈ {num(g['altura_max_m'], 2)}{NB}m y {niveles} niveles más azotea frente a una norma que "
-         f"hoy no se conoce.",
-         "Tener que quitar un nivel o el cuarto de azotea: menos renta con casi el mismo terreno.",
+        (f"Altura del edificio: {num(g.get('altura_pretil_m', g['altura_max_m']), 2)}{NB}m al pretil y "
+         f"{num(g['altura_max_m'], 2)}{NB}m al punto más alto (cubo de escalera), con {niveles} niveles más azotea, frente "
+         f"a una norma que hoy no se conoce.",
+         "Tener que quitar un nivel o el cubo con lavandería: menos renta con casi el mismo terreno.",
          "Pedir en la misma constancia la altura y el número de niveles permitidos; los remetimientos del plano de sitio "
          "están «por confirmar».",
          "Inversionista, con gestor local", antes_compra),
@@ -1388,6 +1453,13 @@ def sec_riesgos(ctx):
          "El proyecto es solo de renta de largo plazo: contratos de arrendamiento habitacional, sin Airbnb. El rendimiento "
          "no depende de renta vacacional.",
          "Inversionista", "Antes de rentar (operación)."),
+        ("Tratamiento fiscal de la renta (IVA): estudios entregados con colchón, frigobar, parrilla y minisplit. "
+         "Por confirmar; el modelo no lo cuantifica (ESTIMADO).",
+         "Si la autoridad los considera amueblados, la exención de casa habitación (Ley del IVA, art. 20, fracc. II; cita "
+         "no verificada) no aplicaría: la renta causaría 16 % de IVA y cambiaría la renta neta o el trato del IVA de obra.",
+         "Opinión escrita de un contador sobre IVA e ISR del arrendamiento. Alternativa a evaluar: entregar los estudios "
+         "sin muebles sueltos. El modelo ya supone que el IVA de la obra no se recupera.",
+         "Contador", antes_compra),
         ("Licencias y tiempos municipales.",
          "Retraso del inicio de obra; el escenario conservador supone "
          f"{P['escenarios']['conservador'].get('retraso_meses', 0)} meses de retraso.",
@@ -1419,7 +1491,7 @@ def sec_riesgos(ctx):
     apartado = cronograma._desglose(P, c, ctx.F["base"])["apartado"]
     s.append(Spacer(1, 6))
     s.append(KeepTogether([caja([
-        p("<b>Orden de las verificaciones previas (fase " + e(f0) + ")</b>", "cuerpo"),
+        p("<b>Orden de las verificaciones previas: fase " + e(f0.replace(" (", ", ").rstrip(")")) + "</b>", "cuerpo"),
         numerado(1, "Constancia de uso de suelo, alineamiento y número oficial.", "vin_ch"),
         numerado(2, "Certificado de libertad de gravamen y revisión del título por el notario.", "vin_ch"),
         numerado(3, "Factibilidades de Aguakan y de CFE.", "vin_ch"),
@@ -1431,6 +1503,16 @@ def sec_riesgos(ctx):
 
 
 # ───────────────────────────── 12. renders ─────────────────────────────
+def _pie_control(path):
+    """'isometrico_depth_control.png' -> 'Isométrico: mapa de profundidad' (pies en español)."""
+    nom = os.path.splitext(os.path.basename(path))[0].lower()
+    tipo = "mapa de profundidad" if "depth" in nom else "dibujo de líneas"
+    base = re.sub(r"_?(lineart|depth|control|canny)", "", nom).strip("_")
+    for a, b in (("isometrico", "isométrico"), ("planta_pb", "planta baja"), ("rooftop", "azotea"), ("_", " ")):
+        base = base.replace(a, b)
+    return f"{base[:1].upper()}{base[1:]}: {tipo}"
+
+
 def sec_renders(ctx):
     s = titulo_seccion(12)
     finales = sorted(glob.glob(os.path.join(RENDERS, "final", "*.png")))
@@ -1468,7 +1550,9 @@ def sec_renders(ctx):
     for i, (_, t) in enumerate(VISTAS_RENDER, 1):
         s.append(numerado(i, e(t) + "."))
     s.append(p("Lista de verificación con la que se calificará cada render: 4 niveles más rooftop, proporción de fachada de "
-               f"{num(ctx.P['lote']['frente_m'], 0)}{NB}m de frente por {num(ctx.g['altura_max_m'], 1)}{NB}m de alto, sin "
+               f"{num(ctx.P['lote']['frente_m'], 2)}{NB}m de frente por "
+               f"{num(ctx.g.get('altura_pretil_m', ctx.g['altura_max_m']), 2)}{NB}m al pretil "
+               f"({num(ctx.g['altura_max_m'], 2)}{NB}m al punto más alto, el cubo de escalera), sin "
                "alberca, textura de block visible, celosías en terracota y salvia, sin textos ni artefactos. Se conservan "
                "solo los que obtengan 8 de 10 o más.", "chico"))
     controles = sorted(f for f in glob.glob(os.path.join(OUT, "*.png"))
@@ -1487,8 +1571,7 @@ def sec_renders(ctx):
     for i in range(0, n, cols):
         fila = []
         for f in controles[i:i + cols]:
-            nom = re.sub(r"\s*control$", "", os.path.splitext(os.path.basename(f))[0].replace("_", " "))
-            fila.append([imagen(f, cw - 14, alto), Spacer(1, 2), p(f"Control: {e(nom)}", "pie_img")])
+            fila.append([imagen(f, cw - 14, alto), Spacer(1, 2), p(e(_pie_control(f)), "pie_img")])
         filas.append(fila + [""] * (cols - len(fila)))
     t = Table(filas, colWidths=[cw] * cols, hAlign="LEFT")
     t.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "BOTTOM"), ("LEFTPADDING", (0, 0), (-1, -1), 7),
@@ -1535,11 +1618,10 @@ def sec_supuestos(ctx):
     s = titulo_seccion(13)
     s.append(p("Definiciones del modelo", "h2"))
     defs = [
-        f"<b>Costo directo.</b> Suma de las partidas (cantidad × P.U.). Todos los precios llevan <b>IVA incluido</b>: la "
-        f"renta de casa habitación está exenta de IVA, así que el IVA de la obra no se acredita y es costo.",
+        f"<b>Costo directo.</b> Suma de las partidas (cantidad × P.U.). {IVA_TXT} {EST()}",
         f"<b>Indirectos y utilidad del constructor ({pct(P['indirectos_constructor_pct'])}).</b> Solo sobre las partidas de "
-        f"obra que ejecuta el constructor. No se aplican a terreno, cierre, estudios y licencias, equipamiento comprado por "
-        f"el propietario ni derechos de conexión.",
+        f"obra que ejecuta el constructor. No se aplican a terreno ni cierre, ni a las partidas marcadas sin indirectos: "
+        f"{_sin_indirectos(c['presupuesto'])}.",
         f"<b>Contingencia ({pct(P['contingencia_pct'])}) y escalamiento ({pct(P['escalamiento_precios_pct'])}).</b> Sobre el "
         f"subtotal de obra (directo más indirectos).",
         f"<b>Colchón de liquidez.</b> {P['colchon_meses']} veces el gasto mensual promedio de obra. Se mantiene, no se "
@@ -1563,7 +1645,7 @@ def sec_supuestos(ctx):
         f"Terreno: oferta de apertura entre {money(P['terreno']['oferta_min'])} y {money(P['terreno']['oferta_max'])}, tope "
         f"de {money(P['terreno']['tope'])}; apartado de {money(P['terreno']['apartado'])} a cuenta del precio ({EST()}); "
         f"gastos de cierre del {pct(c['param']['escrituracion_pct'])} en el escenario base ({EST()}).",
-        f"Rentas, vacancia, lavandería y gastos de operación: todos {EST()}; sin contratos ni comparables cerrados.",
+        f"Rentas, vacancia, lavandería y gastos de operación: todos con etiqueta {EST()}; sin contratos ni comparables cerrados.",
         "Las cantidades que dependen de la geometría se miden sobre los mismos polígonos que dibujan los planos.",
         "Todo se regenera desde params.json: este documento, los planos, las gráficas y presupuesto.xlsx.",
     ]
@@ -1661,7 +1743,9 @@ def _prioridades(ctx):
     if imp("1.01"):
         add(imp("1.01"), f"<b>Demolición</b> (1.01, {money(imp('1.01'))}): la superficie de la casa existente es supuesta.")
     out.sort(key=lambda t: -t[0])
-    return [t for _, t in out]
+    fiscal = ("<b>Tratamiento fiscal de la renta</b> (sin importe: por confirmar con contador). Si los estudios equipados "
+              "se consideran amueblados, la renta causaría IVA y cambiaría la renta neta de los tres escenarios.")
+    return [t for _, t in out] + [fiscal]
 
 
 def sec_observaciones(ctx):
@@ -1678,8 +1762,9 @@ def sec_observaciones(ctx):
         tema = re.sub(r"_(notas|decisiones)$", "", os.path.splitext(nom)[0]).replace("_", " ")
         s.append(p(f"Preguntas abiertas: {e(tema)}", "h2"))
         for i, t in enumerate(its, 1):
-            s.append(numerado(i, md(t), "vin_ch"))
-    s.append(PageBreak())
+            s.append(numerado(i, _dro(md(t)), "vin_ch"))
+    s.append(Spacer(1, 6))
+    s.append(CondPageBreak(610))
     s.append(Marca(toc=(1, "Hoja para anotar")))
     s.append(p("Hoja para anotar", "h2"))
     s.append(numerado(1, "Anoten aquí cada corrección (o directamente en el archivo <b>observaciones.csv</b>, que tiene las "
@@ -1691,13 +1776,13 @@ def sec_observaciones(ctx):
                          "documento.", "vin_ch"))
     s.append(Spacer(1, 5))
     filas = [["#", "Página", "Partida", "Observación", "Propuesta", "Revisó", "Fecha"]]
-    n = 19
+    n = 18
     for i in range(1, n + 1):
         filas.append([str(i)])
     t = tabla(filas, [22, 40, 46, 172, 126, 56, 50], aline="clllllc", nombre="observaciones",
               extra=[("GRID", (0, 0), (-1, -1), 0.5, CONCRETO), ("LINEBELOW", (0, 0), (-1, 0), 0.8, TINTA),
                      ("BOX", (0, 0), (-1, -1), 0.8, TINTA), ("VALIGN", (0, 1), (-1, -1), "MIDDLE")])
-    t._argH[1:] = [29.5] * n
+    t._argH[1:] = [27.5] * n
     s.append(t)
     return s
 
@@ -1707,7 +1792,8 @@ def sec_indice(ctx):
     toc = TableOfContents()
     toc.levelStyles = [S["toc0"], S["toc1"]]
     toc.dotsMinLevel = 0
-    return [Marca(seccion="Contenido"), p("Contenido", "h1"), Regla(largo=46), Spacer(1, 6), toc]
+    return [Marca(seccion="Contenido"), p("Contenido", "h1"), Regla(largo=46), Spacer(1, 6),
+            p("1. Portada <font color=\"%s\" size=\"8\">· página 1</font>" % HEX_GRIS, "toc0"), toc]
 
 
 # ───────────────────────────── armado ─────────────────────────────
@@ -1723,7 +1809,7 @@ def build(path=None):
         return c
 
     doc = Doc(path, pagesize=letter, leftMargin=MARGEN, rightMargin=MARGEN, topMargin=CUERPO_SUP,
-              bottomMargin=Y_CUERPO_INF, title=f"{PROYECTO} · Propuesta {ctx.ver}",
+              bottomMargin=Y_CUERPO_INF, invariant=1, title=f"{PROYECTO} · Propuesta {ctx.ver}",
               author=P["preparado_por"], subject=f"{SUBTITULO} · {DIRECCION}", lang="es-MX")
     alto = PAG_H - Y_CUERPO_INF - CUERPO_SUP
     kw = dict(leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)

@@ -57,7 +57,7 @@ Sin cambio: `muro_m` 0.15, `entrepiso_m` 2.90, `pretil_m` 1.10, `estudio_trasero
 
 | Opción | Núcleo libre | Fondo que pierden los estudios | Observación |
 |---|---|---|---|
-| A. Rampas de 1.05 m, sólo profundizar núcleo | 4.06 m | 0.61 m (≈ 3.5 m² por piso) | La más cómoda y la más cara en área rentable. |
+| A. Rampas de 1.05 m, solo profundizar núcleo | 4.06 m | 0.61 m (≈ 3.5 m² por piso) | La más cómoda y la más cara en área rentable. |
 | **B. Rampas de 0.90 m + núcleo de 3.80 m libres** | 3.80 m | **0.35 m (≈ 2.0 m² por piso)** | **Elegida.** |
 | C. Girar la escalera (rampas a lo ancho del lote, pasillo como descanso) | ≈ 2.10 m | Ganaría ≈ 1.3 m | El patio de luz se reduce a ≈ 1.5 × 2.1 m (≈ 3 m²) y la PB se queda sin sitio para cisterna, basura y vestíbulo. Se descartó; queda como alternativa a discutir. |
 
@@ -100,7 +100,7 @@ Nota de terraza: `terraza_m2` es ahora el área **transitable neta**, medida a p
 - **Baño tipo** 2.20 × 1.40 m (3.1 m²) contra el muro del núcleo, con ventila V3 al patio de luz: lavabo, WC y regadera abierta con sardinel. La puerta P2 (0.70) abate **hacia adentro**: no invade la circulación del estudio y no toca ningún mueble sanitario (holgura comprobada).
 - **Cocineta** de concreto 1.90 × 0.60 m contra el muro que da a la escalera: tarja, parrilla de 2 quemadores y frigobar bajo cubierta.
 - **Cama** de concreto 1.50 × 2.00 m en la esquina de fachada junto a la celosía; **escritorio** bajo la ventana; **guardarropa** abierto; **banca** de concreto (no cabe en PB frente ni en PB fondo, donde está la puerta al patio).
-- **PB frente** (4.45 m de ancho por el pasillo lateral): distribución propia, con baño de 1.30 × 2.20 m girado para dejar libre la puerta al vestíbulo. Tiene puerta a la calle (P3) y al vestíbulo (P1). Rotulado "Convertible a local (sujeto a uso de suelo)"; para convertirlo sólo se retiran cama y guardarropa.
+- **PB frente** (4.45 m de ancho por el pasillo lateral): distribución propia, con baño de 1.30 × 2.20 m girado para dejar libre la puerta al vestíbulo. Tiene puerta a la calle (P3) y al vestíbulo (P1). Rotulado "Convertible a local (sujeto a uso de suelo)"; para convertirlo solo se retiran cama y guardarropa.
 - **PB fondo**: puerta P4 al patio privado de 6.00 × 2.00 m.
 - **Verificado en el test:** en los 4 tipos de estudio, una franja libre de ≥ 0.75 m recorre acceso → cocineta → baño → cama → escritorio. Mínimos: frente de cocineta 0.775 m, cama a tabique de baño 0.775 m (PB frente), frente de WC 0.62–0.72 m (criterio propio de 0.60, no es norma).
 
@@ -149,7 +149,7 @@ Todas caben en carta con márgenes de 15 mm (área útil 18.5 × 24.9 cm) y se e
 4. **Altura:** 12.70 m a pretil y 14.20 m a losa de cubo. ¿Qué altura y cuántos niveles permite la norma aplicable? ¿El cubo y los tinacos cuentan?
 5. **COS / CUS resultantes:** desplante 78 m² (86.7 % del lote) y CUS 3.20. ¿Viables? ¿Se exige área libre o permeable mayor?
 6. **Estacionamiento:** el proyecto tiene 0 cajones. ¿Qué exige la norma para 8 estudios?
-7. **Patio de luz 2.60 × 3.80 m con 11.60 m de altura:** sólo ventila baños; los estudios iluminan por fachada. ¿Cumple dimensiones mínimas de patio?
+7. **Patio de luz 2.60 × 3.80 m con 11.60 m de altura:** solo ventila baños; los estudios iluminan por fachada. ¿Cumple dimensiones mínimas de patio?
 8. **Cisterna:** ¿aceptan cisterna superficial de ≈ 4.8 m³ en el piso del patio de luz más 4 tinacos, o prefieren otra solución (tanques verticales, más tinacos)? ¿El hidroneumático bajo la escalera es práctico?
 9. **Tinacos a N+12.10 sobre base:** la presión por gravedad al piso 4 y a la lavandería es mínima; se depende del hidroneumático. ¿Subirlos al cubo (altura ≈ 15.6 m) o presurizar?
 10. **Puertas de baño hacia adentro** en baños de 2.20 × 1.40: ¿de acuerdo, o prefieren corrediza?

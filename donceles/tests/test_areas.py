@@ -89,6 +89,9 @@ PARES = {
     "comunes": "comunes_planta_m2",
     "cuarto_azotea": "cuarto_azotea_m2",
     "losa_cimentacion": "losa_cimentacion_m2",
+    "pergola": "pergola_m2",
+    "lavanderia_int": "lavanderia_int_m2",
+    "pasillo_acceso_pb": "pasillo_acceso_pb_m2",
 }
 for nombre, clave in PARES.items():
     ap = poly_area(P[nombre])
@@ -129,6 +132,41 @@ for r in cuadro:
         if campo not in r:
             check(False, f"cuadro: falta {campo} en {r.get('clave')}")
 check(sum(r["cantidad"] for r in cuadro if r["clave"] in ("P1", "P2", "V3")) == 24, "8 accesos, 8 puertas de baño, 8 ventilas")
+
+# claves para presupuesto: cimentación, barda, conteos
+def perimetro(pts):
+    return sum(math.hypot(pts[i][0] - pts[(i + 1) % len(pts)][0], pts[i][1] - pts[(i + 1) % len(pts)][1])
+               for i in range(len(pts)))
+
+
+G = d.G
+paquete = G["sascab_m"] + G["plantilla_m"] + G["losa_cimentacion_m"]
+check(abs(A["desnivel_pb_banqueta_m"] - (paquete - G["excavacion_m"])) < 1e-9,
+      f"piso de PB sobre banqueta = sascab + plantilla + losa − excavación = {A['desnivel_pb_banqueta_m']:.2f} m")
+check(A["desnivel_pb_banqueta_m"] >= 0, "el piso de PB no queda por debajo de la banqueta")
+check(G["excavacion_m"] < 0.75, f"el desplante ({G['excavacion_m']:.2f} m bajo banqueta) queda arriba del freático (0.75 m)")
+check(abs(A["altura_max_m"] - (A["altura_max_sobre_npt_m"] + A["desnivel_pb_banqueta_m"])) < 1e-9,
+      f"altura máxima sobre banqueta {A['altura_max_m']:.2f} = sobre N+0.00 {A['altura_max_sobre_npt_m']:.2f} + desnivel")
+check(A["altura_max_m"] >= A["altura_tinacos_m"] > A["altura_pretil_m"], "punto más alto = losa de cubo (tinacos y pretil quedan abajo)")
+check(abs(A["cimbra_frontera_m"] - perimetro(P["losa_cimentacion"])) < 1e-6,
+      f"cimbra_frontera_m = perímetro de la losa de cimentación = {A['cimbra_frontera_m']:.2f} m")
+check(abs(A["losa_cimentacion_m3"] - poly_area(P["losa_cimentacion"]) * G["losa_cimentacion_m"]) < 1e-6,
+      f"losa de cimentación = {A['losa_cimentacion_m3']:.2f} m³")
+check(abs(A["barda_patio_m2"] - (2 * (d.D - d.yR) + d.W) * G["barda_patio_m"]) < 1e-6,
+      f"barda_patio_m2 = (2 × 2.00 + 6.00) × {G['barda_patio_m']:.2f} = {A['barda_patio_m2']:.2f} m²")
+check(abs(A["comunes_pb_m2"] - (poly_area(P["comunes"]) + poly_area(P["pasillo_acceso_pb"]))) < 1e-6,
+      f"comunes_pb = núcleo + pasillo de acceso = {A['comunes_pb_m2']:.2f} m²")
+cnt = {r["clave"]: r["cantidad"] for r in cuadro}
+check(A["mosquiteros_n"] == cnt["V1"] + cnt["V2"] + cnt["V5"] == 14, "mosquiteros_n = V1 + V2 + V5 = 14")
+check(A["puertas_estudio_n"] == 8 and A["puertas_servicio_n"] == 2 and A["puertas_bano_n"] == 8,
+      "8 puertas de estudio, 8 de baño y 2 de servicio (P5, P6)")
+for clave, key in (("banca", "bancas_estudio_n"), ("escritorio", "escritorios_n"), ("cama", "camas_n"),
+                   ("guardarropa", "guardarropas_n")):
+    n = sum((3 if k.startswith("tipo") else 1) * sum(1 for (nm, _r) in d.layout(k)["muebles"] if nm == clave)
+            for k in d.ROOMS)
+    check(A[key] == n == 8, f"{key} = {n} (una pieza por estudio)")
+check(A["bancas_terraza_n"] == 2 and A["mesa_terraza_n"] == 1 and A["jardineras_n"] == 2,
+      "terraza: 2 bancas, 1 mesa y 2 jardineras dibujadas")
 
 # ------------------------------------------------------------------ 2. escalera
 print("2. Escalera en U")

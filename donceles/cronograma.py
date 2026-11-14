@@ -368,7 +368,7 @@ def plan_pagos(P, c):
                        "visto bueno escrito del DRO y nuestro supervisor."),
         "bandera": "",
         "nota": (f"{modelo.pct(pct_ret, 0)} retenido de cada pago de obra {obra_txt} "
-                 "(obra con indirectos + sus indirectos; no aplica a terreno, licencias "
+                 "(partidas con indirectos, más sus indirectos; no aplica a terreno, licencias "
                  "ni compras directas del propietario)."),
     })
     for tipo, clave, concepto, key, pkey in (
