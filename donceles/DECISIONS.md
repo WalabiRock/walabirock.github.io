@@ -39,3 +39,8 @@ Bitácora de decisiones y cambios a `params.json`. `apply_review.py` agrega aqu�
 - R5. Partida 1.05: 9 → 11 meses (duración real de F3–F7). Supuestos 3.07, 7.02 y 7.03 explican el P.U. usado.
 - R6. La planta de sitio (A-01) va a 1:150 para mostrar calle y vecinos; el resto de las láminas, a 1:100. Aceptado.
 - R7. El PDF y `presupuesto.xlsx` se versionan en git aunque cambien de bytes al reconstruir (fechas internas); es deliberado, para que los revisores los descarguen sin correr nada.
+
+## v1.0 — correcciones tras la 2.ª ronda de revisión (docs/REVIEW_ronda2.md)
+- S1. Tabla de riesgos: antes de F1 se paga toda la fase F0 (estudios, gestión y apartado), no solo el apartado.
+- S2. Partidas nuevas (ESTIMADO): 3.09 retiro del material de excavación, 4.10 impermeabilización de la losa del cubo y lavandería, 7.08 firme del patio privado, 11.16 contenedores de basura. La 3.06 dice «losa maciza de 0.35 m»; la 5.06 queda explícitamente como provisión para la cisterna superficial dibujada; la 8.04 incluye el barandal del vacío en azotea; la 10.07 incluye plantas. Total: 105 partidas.
+- S3. No incluidos y por cotizar antes de F3: honorarios de supervisión propia y cuotas IMSS de obra.

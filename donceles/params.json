@@ -631,7 +631,7 @@
     {
       "clave": "3.06",
       "capitulo": "Cimentación",
-      "concepto": "Concreto premezclado f'c 250 bombeado en losa de cimentación y contratrabes",
+      "concepto": "Concreto premezclado f'c 250 bombeado en losa de cimentación maciza de 0.35 m",
       "unidad": "m³",
       "cantidad": "geo:losa_cimentacion_m2*0.35",
       "pu": 4600.0,
@@ -639,7 +639,7 @@
       "fuentes": [
         "F05"
       ],
-      "supuesto": "Espesor equivalente 0.35 m; tabulador CDMX $4,997.84 ÷ 1.2751 × 1.16 = $4,547, redondeado a Cancún.",
+      "supuesto": "Losa maciza de 0.35 m (ESTIMADO, por confirmar con estructurista); tabulador CDMX $4,997.84 ÷ 1.2751 × 1.16 = $4,547, redondeado a Cancún.",
       "aplica_indirectos": true,
       "fase": "F3",
       "respaldo": "referencia_no_verificada"
@@ -674,6 +674,20 @@
       "aplica_indirectos": true,
       "fase": "F3",
       "respaldo": "sin_referencia"
+    },
+    {
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "aplica_indirectos": true,
+      "respaldo": "sin_referencia",
+      "clave": "3.09",
+      "capitulo": "Cimentación",
+      "concepto": "Carga y retiro del material de excavación a tiro autorizado",
+      "unidad": "m³",
+      "cantidad": "geo:excavacion_m3",
+      "pu": 600.0,
+      "supuesto": "Volumen de excavación en banco según plano (sin abundamiento); mismo P.U. que el retiro de escombro 1.02 (ESTIMADO).",
+      "fase": "F3"
     },
     {
       "clave": "4.01",
@@ -805,8 +819,22 @@
       "unidad": "m²",
       "cantidad": "geo:barda_patio_m2",
       "pu": 560.0,
-      "supuesto": "Superficie dibujada en A-02 (una cara); mismo P.U. que el muro 4.01, sin castillos ni cimiento propio: ESTIMADO. Si la barda colindante existe y sirve, esta partida se elimina.",
+      "supuesto": "Superficie dibujada en A-02 (una cara); mismo P.U. que el muro 4.01. Castillos y cimiento de la barda por definir en proyecto estructural: no incluidos (ESTIMADO). Si la barda colindante existe y sirve, esta partida se elimina.",
       "fase": "F4"
+    },
+    {
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "aplica_indirectos": true,
+      "respaldo": "sin_referencia",
+      "clave": "4.10",
+      "capitulo": "Estructura y albañilería",
+      "concepto": "Impermeabilización de la losa del cubo de escalera y lavandería",
+      "unidad": "m²",
+      "cantidad": "geo:cuarto_azotea_m2",
+      "pu": 230.0,
+      "supuesto": "Azotea del cuarto de azotea, no incluida en 4.07; mismo P.U. (ESTIMADO).",
+      "fase": "F5"
     },
     {
       "clave": "5.01",
@@ -881,7 +909,7 @@
     {
       "clave": "5.06",
       "capitulo": "Instalación hidrosanitaria",
-      "concepto": "Cisterna superficial (provisión con precio de polietileno 10,000 L; solución por definir)",
+      "concepto": "Cisterna superficial de ≈4.8 m³ según plano A-02 (provisión con precio de tanque de polietileno de 10,000 L)",
       "unidad": "pza",
       "cantidad": 1,
       "pu": 55000.0,
@@ -889,7 +917,7 @@
       "fuentes": [
         "F24"
       ],
-      "supuesto": "PROVISIÓN. Un tanque de 10,000 L en una pieza no cabe en PB: el plano A-02 muestra una cisterna superficial de ≈4.8 m³ más 4 tinacos (≈9.2 m³ en total). Se conserva el importe hasta definir solución y capacidad con Aguakan.",
+      "supuesto": "PROVISIÓN (ESTIMADO). Un tanque de 10,000 L en una pieza no cabe en PB; el plano muestra una cisterna superficial de concreto de ≈4.8 m³ más 4 tinacos (≈9.2 m³ en total). No hay precio para la cisterna de concreto: se conserva este importe hasta definir solución y capacidad con Aguakan.",
       "aplica_indirectos": true,
       "fase": "F5",
       "respaldo": "referencia_no_verificada"
@@ -1207,6 +1235,20 @@
       "respaldo": "sin_referencia"
     },
     {
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "aplica_indirectos": true,
+      "respaldo": "sin_referencia",
+      "clave": "7.08",
+      "capitulo": "Acabados",
+      "concepto": "Firme de concreto escobillado en patio privado de PB",
+      "unidad": "m²",
+      "cantidad": "geo:patio_post_m2",
+      "pu": 420.0,
+      "supuesto": "Patio de 6 × 2 m; mismo P.U. que el piso de terraza 10.02 (ESTIMADO).",
+      "fase": "F6"
+    },
+    {
       "clave": "8.01",
       "capitulo": "Herrería, cancelería y celosía",
       "concepto": "Cancelería de acero negro con vidrio claro 6 mm (ventanas y puertas-ventana)",
@@ -1257,7 +1299,7 @@
       "pu": 1900.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "≈10 m por nivel × 4; regla práctica.",
+      "supuesto": "≈10 m por nivel × 4; regla práctica; incluye el barandal del vacío del patio de luz en azotea.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -1507,11 +1549,11 @@
       "respaldo": "sin_referencia",
       "clave": "10.07",
       "capitulo": "Rooftop",
-      "concepto": "Jardinera de concreto en terraza (sin plantas)",
+      "concepto": "Jardinera de concreto en terraza, con sustrato y plantas",
       "unidad": "pza",
       "cantidad": "geo:jardineras_n",
       "pu": 2500.0,
-      "supuesto": "Jardineras de 0.60 × 0.60 m dibujadas en A-04; P.U. de regla práctica sin referencia (ESTIMADO).",
+      "supuesto": "Jardineras de 0.60 × 0.60 m dibujadas en A-04, con plantas; P.U. de regla práctica sin referencia (ESTIMADO).",
       "fase": "F6"
     },
     {
@@ -1729,6 +1771,20 @@
       "aplica_indirectos": false,
       "fase": "F7",
       "respaldo": "sin_referencia"
+    },
+    {
+      "estado": "ESTIMADO",
+      "fuentes": [],
+      "aplica_indirectos": false,
+      "respaldo": "sin_referencia",
+      "clave": "11.16",
+      "capitulo": "Equipamiento",
+      "concepto": "Contenedor de basura con tapa para el área de servicio de PB",
+      "unidad": "pza",
+      "cantidad": 2,
+      "pu": 1200.0,
+      "supuesto": "Dos contenedores dibujados en A-02; precio de tienda recordado, no consultado (ESTIMADO).",
+      "fase": "F7"
     },
     {
       "clave": "12.01",
