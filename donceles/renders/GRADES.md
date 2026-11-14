@@ -5,7 +5,7 @@
 
 ## Lista de verificación (1 punto c/u salvo los marcados ×2; total 10)
 1. (×2) Número de niveles = 4 pisos + rooftop.
-2. (×2) Proporción de fachada ≈ 6 m de frente : 13.3 m de alto (con pretil y cubo).
+2. (×2) Proporción de fachada ≈ 6.00 m de frente : 12.90 m al pretil (14.40 m al punto más alto, cubo de escalera), sobre banqueta.
 3. Sin alberca ni espejo de agua.
 4. Textura de block aparente visible (hiladas).
 5. Celosías en terracota y salvia, en la posición de los planos.

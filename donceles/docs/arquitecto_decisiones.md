@@ -2,7 +2,7 @@
 
 Proyecto Donceles · Donceles 28, SM 64, Cancún · lote 6.00 × 15.00 m · 8 estudios (2 por piso), 4 niveles + azotea.
 Archivos de este agente: `drawings.py`, `out/`, `tests/test_areas.py` y este documento.
-Todo sale de `params.json`; `python drawings.py` dibuja y `python tests/test_areas.py` verifica (280 comprobaciones, exit 0).
+Todo sale de `params.json`; `python drawings.py` dibuja y `python tests/test_areas.py` verifica (311 comprobaciones, exit 0).
 
 Regla seguida: ninguna cifra normativa está inventada. Lo que no se pudo citar va como **ESTIMADO** o **por confirmar**.
 
@@ -26,7 +26,10 @@ Mientras no exista `geometria_rev`, `drawings.py` usa los valores propuestos; al
 | `escalera_peraltes_por_piso` | (no existe) | 16 | 16 × 18.125 cm = 2.90 m. |
 | `losa_m` | (no existe) | 0.25 | Vigueta y bovedilla (v0 lo tenía fijo en el código). |
 | `tabique_bano_m` | (no existe) | 0.10 | Tabiques de baño. |
-| `losa_cimentacion_m` | (no existe) | 0.45 | Espesor dibujado. ESTIMADO, lo define el estructurista. |
+| `losa_cimentacion_m` | 0.45 | 0.35 | Losa maciza, una sola solución en plano y presupuesto (revisión, hallazgo 2). ESTIMADO. |
+| `sascab_m` | (no existe) | 0.30 | Relleno de sascab compactado bajo la losa. |
+| `plantilla_m` | (no existe) | 0.05 | Plantilla de concreto pobre. |
+| `excavacion_m` | (no existe) | 0.50 | Excavación bajo banqueta. Mientras `sascab_m` no exista en `params.json`, `drawings.py` usa 0.35 de losa aunque el archivo diga 0.45. |
 | `cubo_altura_m` | (no existe) | 2.60 | Altura del cubo y la lavandería sobre azotea (igual que v0). |
 | `losa_cubo_m` | (no existe) | 0.20 | Losa de cubo y lavandería. |
 | `lavanderia_largo_int_m` | (no existe) | 3.00 | Largo interior de la lavandería. |
@@ -40,10 +43,11 @@ Sin cambio: `muro_m` 0.15, `entrepiso_m` 2.90, `pretil_m` 1.10, `estudio_trasero
 
 **Textos del presupuesto que quedan desfasados** (los decide el orquestador / agente de costos):
 
-- "Losa de cimentación 90 m²": la losa dibujada es la huella del edificio, **78.0 m²** (6.00 × 13.00). El patio de 12 m² lleva firme, no losa de cimentación. Si se quiere losa en todo el lote, avisar.
+- Losa de cimentación: huella del edificio, **78.0 m²** (6.00 × 13.00) × 0.35 m = 27.3 m³; cimbra de frontera 38.0 m; excavación 39.0 m³; sascab 23.4 m³. El patio de 12 m² lleva firme, no losa de cimentación.
 - "losas de vigueta y bovedilla (294 m²)": ahora **266.5 m²** (sin huecos de escalera) o 288.4 m² de superficie cubierta total.
 - "Piso de concreto pulido (294 m²)": ahora **236.5 m²** (8 estudios + pasillos y llegadas + vestíbulo y acceso PB + lavandería; no incluye terraza).
 - "Celosía de fachada (40 m²)": lo dibujado suma **24.5 m²**.
+- Pérgola dibujada: **22.3 m²** (5.40 × 4.125). Barda del patio: **24.0 m²** por cara (10.0 m × 2.40), muro nuevo. Mosquiteros: **14**.
 - "cisterna 10,000 L": lo que cabe sin enterrar es ≈ 4.8 m³ en PB + 4.4 m³ en tinacos (ver §4).
 - "Escalera de concreto en U (4 niveles)": 64 peraltes, 8 rampas de 0.90 m.
 
@@ -91,7 +95,7 @@ Sin cambio: `muro_m` 0.15, `entrepiso_m` 2.90, `pretil_m` 1.10, `estudio_trasero
 | Cubo + lavandería en azotea | 15.1 (fijo) | — | **15.95** | calculado |
 | Total cubierto (4 niveles + azotea) | 295.4 | 295.4 | **288.4** | −7.0 |
 | Terraza | 55.0 (bruta) | — | **47.6 neta / 52.2 bruta** | ver nota |
-| Altura máxima | 14.20 | 14.20 | **14.20** | sin cambio |
+| Altura máxima | 14.20 | 14.20 | **14.20 sobre N+0.00 / 14.40 sobre banqueta** | ver §9 |
 
 Nota de terraza: `terraza_m2` es ahora el área **transitable neta**, medida a paños interiores de pretil y sin cubo, lavandería ni vacío del patio de luz (47.6 m²). El equivalente a la cifra de v0 es `azotea_abierta_bruta_m2` = 52.2 m².
 
@@ -99,7 +103,7 @@ Nota de terraza: `terraza_m2` es ahora el área **transitable neta**, medida a p
 
 - **Baño tipo** 2.20 × 1.40 m (3.1 m²) contra el muro del núcleo, con ventila V3 al patio de luz: lavabo, WC y regadera abierta con sardinel. La puerta P2 (0.70) abate **hacia adentro**: no invade la circulación del estudio y no toca ningún mueble sanitario (holgura comprobada).
 - **Cocineta** de concreto 1.90 × 0.60 m contra el muro que da a la escalera: tarja, parrilla de 2 quemadores y frigobar bajo cubierta.
-- **Cama** de concreto 1.50 × 2.00 m en la esquina de fachada junto a la celosía; **escritorio** bajo la ventana; **guardarropa** abierto; **banca** de concreto (no cabe en PB frente ni en PB fondo, donde está la puerta al patio).
+- **Cama** de concreto 1.50 × 2.00 m en la esquina de fachada junto a la celosía; **escritorio / barra de concreto colado** (1.20 × 0.55; 1.10 en PB frente) bajo la ventana; **guardarropa** abierto; **banca** de concreto en los 8 estudios (1.70 m al frente y 1.30 m al fondo en pisos 2–4; 1.00 m en PB frente y 0.95 m en PB fondo, más cortas por las puertas a calle y a patio).
 - **PB frente** (4.45 m de ancho por el pasillo lateral): distribución propia, con baño de 1.30 × 2.20 m girado para dejar libre la puerta al vestíbulo. Tiene puerta a la calle (P3) y al vestíbulo (P1). Rotulado "Convertible a local (sujeto a uso de suelo)"; para convertirlo solo se retiran cama y guardarropa.
 - **PB fondo**: puerta P4 al patio privado de 6.00 × 2.00 m.
 - **Verificado en el test:** en los 4 tipos de estudio, una franja libre de ≥ 0.75 m recorre acceso → cocineta → baño → cama → escritorio. Mínimos: frente de cocineta 0.775 m, cama a tabique de baño 0.775 m (PB frente), frente de WC 0.62–0.72 m (criterio propio de 0.60, no es norma).
@@ -107,14 +111,14 @@ Nota de terraza: `terraza_m2` es ahora el área **transitable neta**, medida a p
 ## 4. Núcleo de PB y agua
 
 - Vestíbulo: el pasillo de acceso de 1.10 m llega al piso del patio de luz; paso libre de 1.30 m (entre el muro y la basura) hasta el pasillo y la escalera.
-- **Cisterna superficial** (no enterrada, por el freático a −0.75 m): tanque de concreto sobre la losa de cimentación, en el piso del patio de luz, 2.50 × 1.70 × 1.80 m exteriores, **≈ 4.8 m³ útiles (ESTIMADO)**. Su tapa queda bajo la ventila V3 (antepecho 1.90). Es el único sitio de PB donde cabe sin tocar el patio privado ni las circulaciones.
+- **Cisterna superficial** (no enterrada, por el freático a 0.75 m bajo banqueta): tanque de concreto sobre la losa de cimentación, en el piso del patio de luz, 2.50 × 1.70 × 1.80 m exteriores, **≈ 4.8 m³ útiles (ESTIMADO)**. Su tapa queda bajo la ventila V3 (antepecho 1.90). Es el único sitio de PB donde cabe sin tocar el patio privado ni las circulaciones.
 - Con 4 tinacos de 1,100 L en azotea el almacenamiento total es ≈ 9.2 m³, cerca de los 10,000 L del presupuesto pero **repartido**; una cisterna única de 10 m³ no cabe en superficie.
 - Basura (2 contenedores) junto a la cisterna; hidroneumático y bodega bajo la rampa superior; medidores en gabinete empotrado en el muro del pasillo de acceso (ubicación por confirmar con CFE y Aguakan).
 
 ## 5. Azotea
 
 - Cubo de escalera + lavandería en un solo volumen de 2.20 × 7.25 m contra la colindancia poniente; lavandería 1.90 × 3.00 m interiores con 2 lavadoras y 2 secadoras.
-- **Tinacos bajados** de la losa del cubo a una base de 0.50 m al fondo de la azotea: quedan en N+13.50, debajo de la losa del cubo (N+14.20). Así la altura máxima real es 14.20 m; con los tinacos sobre el cubo, como dibujaba v0, serían ≈ 15.6 m aunque v0 declarara 14.20.
+- **Tinacos bajados** de la losa del cubo a una base de 0.50 m al fondo de la azotea: quedan en N+13.50, debajo de la losa del cubo (N+14.20), que es el punto más alto. Con los tinacos sobre el cubo, como dibujaba v0, serían ≈ 15.6 m aunque v0 declarara 14.20.
 - **Paneles solares sobre la pérgola** (6 paneles de ≈ 2.28 × 1.13 m, ≈ 3 kW, ESTIMADO): no caben en otro lugar de la azotea sin quitar terraza.
 - Sin alberca en ninguna lámina.
 
@@ -137,7 +141,17 @@ Todas caben en carta con márgenes de 15 mm (área útil 18.5 × 24.9 cm) y se e
 - `muros_block_m2` (564.9 m²) es área de **una cara**, neta de vanos, con altura libre de 2.65 m por nivel; incluye tabiques de baño, pretiles y cuartos de azotea. No incluye bardas del patio ni castillos, cadenas o trabes. Desglose en `muros_block_desglose()`.
 - `impermeabilizacion_m2` (68.1) es la proyección de azotea, sin traslapes ni chaflanes.
 - Vecinos, banqueta, calle y norte son esquemáticos: no hay levantamiento.
-- Espesor de losa de cimentación, barda de patio, tinacos y paneles: ESTIMADO.
+- Paquete de cimentación, barda de patio, tinacos y paneles: ESTIMADO.
+
+## 9. Cambios tras la revisión independiente (REVIEW.md)
+
+- **Cimentación (hallazgo 2):** una sola solución en planos y presupuesto. Excavación de 0.50 m bajo banqueta; sascab 0.30 + plantilla 0.05 + **losa maciza 0.35 m** = paquete de 0.70 m. El piso terminado de PB (N+0.00) queda **0.20 m sobre la banqueta** (calculado: sascab + plantilla + losa − excavación), lo que ayuda contra inundación. El desplante (N−0.70) queda 0.25 m arriba del nivel freático (0.75 m bajo banqueta = N−0.95). Dibujado en A-05 y A-06 con capas rotuladas, y marcado "ESTIMADO — por confirmar con mecánica de suelos y estructurista".
+- **Accesos de PB:** rampa de 2.00 m al 10 % tras la reja R1 y escalón de 0.20 m en el umbral de P3 (A-02, nota 11; A-07). La solución del umbral de P3 queda por definir: el paramento está sobre el alineamiento y el escalón no puede ir en la banqueta.
+- **Alturas (hallazgo 11):** los niveles N se miden desde el piso terminado de PB. Sobre banqueta: pretil **12.90 m**, tinacos **13.70 m**, losa de cubo **14.40 m = punto más alto**. `areas()["altura_max_m"]` pasa de 14.20 a **14.40** (sobre banqueta); la cifra anterior queda en `altura_max_sobre_npt_m`. Las fachadas y cortes acotan el tramo de 1.50 m del cubo y la cota total dice a qué se refiere. Proporción de fachada sobre banqueta: 6.00 : 12.90 al pretil, 6.00 : 14.40 al punto más alto.
+- **Elementos sin partida (hallazgo 3) y cantidades (hallazgo 5):** `areas()` entrega ahora `barda_patio_m2`, `pergola_m2`, `lavanderia_int_m2`, `cimbra_frontera_m`, `mosquiteros_n`, `puertas_estudio_n`, `puertas_servicio_n`, `bancas_estudio_n`, `escritorios_n`, `bancas_terraza_n`, `mesa_terraza_n`, `jardineras_n` (y `puertas_bano_n`, `puertas_exteriores_vidrio_n`, `camas_n`, `guardarropas_n`, volúmenes de cimentación). La barda del patio se rotula en A-02 como muro nuevo, presupuestado como tal salvo que se confirme una barda existente.
+- **Cotas (hallazgo 10):** las cadenas parciales incluyen los muros de 0.15 y el ojo de 0.10, y suman 6.00 y 15.00.
+- **Comunes de PB (hallazgo 12):** `comunes_planta_m2` (11.78) es solo el núcleo de escalera y pasillo, igual en los 4 niveles. En PB se suma el pasillo lateral de acceso, 5.36 m² (`pasillo_acceso_pb_m2`); total `comunes_pb_m2` = 17.14 m². El piso del patio de luz es descubierto y no cuenta.
+- **Menores:** rótulo "losa 0.25" movido en A-05; niveles de descanso unificados (absolutos N+ en PB y azotea, relativos "del piso" en planta tipo); "persiana de ventilación" en lugar de "louver"; "solo" sin tilde; pies de plano con "Col. Donceles 28, SM 64"; mapa de profundidad sin esquina negra.
 
 ---
 
@@ -146,7 +160,7 @@ Todas caben en carta con márgenes de 15 mm (área útil 18.5 × 24.9 cm) y se e
 1. **Ancho de escalera:** ¿0.90 m por rampa (descansos de 0.92) lo acepta el reglamento de construcción aplicable para 8 viviendas en 4 niveles? Si pide 1.00–1.20 m, el núcleo crece y los estudios pierden fondo.
 2. **Peralte de 18.1 cm y huella de 28 cm:** ¿dentro de norma? (por confirmar; no se citó el artículo).
 3. **Restricciones:** se dibujó frente 0.00, laterales 0.00 y fondo 2.00 m. Todo por confirmar con la constancia de uso de suelo (PDU 2022 anulado).
-4. **Altura:** 12.70 m a pretil y 14.20 m a losa de cubo. ¿Qué altura y cuántos niveles permite la norma aplicable? ¿El cubo y los tinacos cuentan?
+4. **Altura:** sobre banqueta, 12.90 m a pretil y 14.40 m a losa de cubo (punto más alto). ¿Qué altura y cuántos niveles permite la norma aplicable? ¿El cubo y los tinacos cuentan?
 5. **COS / CUS resultantes:** desplante 78 m² (86.7 % del lote) y CUS 3.20. ¿Viables? ¿Se exige área libre o permeable mayor?
 6. **Estacionamiento:** el proyecto tiene 0 cajones. ¿Qué exige la norma para 8 estudios?
 7. **Patio de luz 2.60 × 3.80 m con 11.60 m de altura:** solo ventila baños; los estudios iluminan por fachada. ¿Cumple dimensiones mínimas de patio?
@@ -154,6 +168,6 @@ Todas caben en carta con márgenes de 15 mm (área útil 18.5 × 24.9 cm) y se e
 9. **Tinacos a N+12.10 sobre base:** la presión por gravedad al piso 4 y a la lavandería es mínima; se depende del hidroneumático. ¿Subirlos al cubo (altura ≈ 15.6 m) o presurizar?
 10. **Puertas de baño hacia adentro** en baños de 2.20 × 1.40: ¿de acuerdo, o prefieren corrediza?
 11. **Celosía + ventila interior** (C1 + V2): ¿detalle constructivo y costo razonables frente a ciclones?
-12. **Losa de cimentación:** espesor 0.45 m y huella de 78 m² son supuestos; ¿la mecánica de suelos pedirá losa en todo el lote?
+12. **Cimentación:** losa maciza de 0.35 m sobre sascab de 0.30 m y plantilla de 0.05 m, con excavación de 0.50 m (desplante 0.25 m arriba del freático) y piso de PB 0.20 m sobre banqueta. Todo es supuesto: ¿la mecánica de suelos lo acepta, pide mayor espesor o losa en todo el lote? ¿El escalón de 0.20 m en P3 y la rampa al 10 % son aceptables para accesibilidad?
 13. **Medidores:** ¿CFE exige que den a la calle? El pasillo de 1.10 m debe quedar libre.
 14. **Carga en azotea:** pérgola con paneles, 4 tinacos llenos (≈ 4.4 t) y lavandería: revisar con el estructurista.
