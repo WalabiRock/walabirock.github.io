@@ -641,7 +641,8 @@ class Ctx:
                     self.ax.plot([q - k, q + k], [pos - k, pos + k], color=INK, lw=0.6, zorder=16)
                     self.ax.plot([q, q], [pos - 0.14 * side, pos + 0.07 * side], color=color, lw=0.3, zorder=15)
                 sd = -side if abs(b - a) < 0.42 else side
-                self.ax.text((a + b) / 2, pos + 0.06 * sd, lab, fontsize=size_, color=INK, ha="center",
+                off = 0.21 if abs(b - a) < 0.42 else 0.06            # fuera del alcance de las marcas
+                self.ax.text((a + b) / 2, pos + off * sd, lab, fontsize=size_, color=INK, ha="center",
                              va="bottom" if sd > 0 else "top", zorder=16)
             else:
                 self.ax.plot([pos, pos], [a, b], color=color, lw=0.4, zorder=15)
@@ -649,7 +650,8 @@ class Ctx:
                     self.ax.plot([pos - k, pos + k], [q - k, q + k], color=INK, lw=0.6, zorder=16)
                     self.ax.plot([pos - 0.14 * side, pos + 0.07 * side], [q, q], color=color, lw=0.3, zorder=15)
                 sd = -side if abs(b - a) < 0.42 else side
-                self.ax.text(pos + 0.07 * sd, (a + b) / 2, lab, fontsize=size_, color=INK, rotation=90,
+                off = 0.21 if abs(b - a) < 0.42 else 0.07
+                self.ax.text(pos + off * sd, (a + b) / 2, lab, fontsize=size_, color=INK, rotation=90,
                              ha="left" if sd > 0 else "right", va="center", zorder=16)
 
     def level(self, x, z, s, side=-1, size=5.0, color=INK):
@@ -1172,8 +1174,8 @@ def plan_pb():
     c.rect(CIS[0] + 0.15, CIS[1] + 0.15, CIS[2] - 0.15, CIS[3] - 0.15, fc="none", ec=WATER, lw=0.4, z=4.2,
            ls=(0, (2, 1.2)))
     c.note((CIS[0] + CIS[2]) / 2, (CIS[1] + CIS[3]) / 2 + 0.3, 7)
-    c.text((CIS[0] + CIS[2]) / 2, (CIS[1] + CIS[3]) / 2 - 0.2, "Cisterna superficial\n(sobre losa, sin excavar)",
-           size=4.2, color=WATER)
+    c.text((CIS[0] + CIS[2]) / 2, (CIS[1] + CIS[3]) / 2 - 0.2, f"Cisterna superficial ≈{areas()['cisterna_superficial_m3']:.1f} m³\n(provisión; solución y capacidad\npor definir con Aguakan)",
+           size=3.9, color=WATER)
     bx0, by0 = W - t - 1.25, CIS[1] - 0.80
     for i in range(2):
         c.rect(bx0 + i * 0.62, by0, bx0 + i * 0.62 + 0.55, by0 + 0.65, fc=CONC, lw=0.4, z=4)
@@ -1202,7 +1204,8 @@ def plan_pb():
     y = sh.panel(x, y, "NÚCLEO Y SERVICIOS EN PB", [
         (7, f"Cisterna superficial de concreto sobre la losa de cimentación, {f2(CIS[2] - CIS[0])} × "
             f"{f2(CIS[3] - CIS[1])} × {CIS_H:.2f} m ext., ≈ {A['cisterna_superficial_m3']:.1f} m³ útiles "
-            "(ESTIMADO). Sin cisterna enterrada: nivel freático 0.75 m bajo banqueta."),
+            "(ESTIMADO). Es una provisión: solución y capacidad por definir con Aguakan. Sin cisterna enterrada: "
+            "nivel freático 0.75 m bajo banqueta."),
         (8, "Basura: 2 contenedores con tapa, ventilados al patio de luz."),
         (9, "Medidores CFE (9) y de agua en gabinete empotrado en muro; ubicación por confirmar "
             "con CFE y Aguakan."),
@@ -1343,7 +1346,7 @@ def plan_roof(lineart=False):
             "≈ 2.28 × 1.13 m (≈ 3 kW, ESTIMADO; dimensión por confirmar con proveedor)."),
         (2, "Mesa común de concreto 2.20 × 0.80 m."),
         (3, "Bancas de concreto de 0.45 × 3.00 m adosadas al pretil (2 piezas)."),
-        (4, "Jardineras de concreto de 0.60 × 0.60 m con plantas de sombra (2 piezas)."),
+        (4, "Jardineras de concreto de 0.60 × 0.60 m con sustrato y plantas (2 piezas)."),
         (5, f"Cubo de escalera: la última rampa llega a N+{TOP:.2f}; puerta P5 a la azotea y celosía C2 "
             "de ventilación."),
         (6, "Lavandería de paga 1.90 × 3.00 m: 2 lavadoras y 2 secadoras."),
