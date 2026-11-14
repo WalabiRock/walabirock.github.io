@@ -1,0 +1,186 @@
+{
+ "1": {
+  "class_type": "CheckpointLoaderSimple",
+  "inputs": {
+   "ckpt_name": "<checkpoint SDXL>.safetensors"
+  }
+ },
+ "2": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "street-level front elevation of a narrow 6 meter wide four-storey building plus rooftop terrace with black steel pergola, ground floor with door, window and side gate, one-storey neighbouring houses, golden hour warm light, quiet residential street, low-cost tropical brutalist apartment building in Cancun Mexico, exposed sealed grey concrete block walls with visible block coursing, black steel window frames, breeze-block celosia screens in terracotta and sage green, polished concrete, lush tropical plants, architectural photography, photorealistic, natural light, 35mm, high detail",
+   "clip": [
+    "1",
+    1
+   ]
+  }
+ },
+ "3": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "swimming pool, pool, water feature, text, letters, watermark, signage, logo, people faces, extra floors, skyscraper, glass curtain wall, pitched roof, cartoon, illustration, blurry, lowres, distorted",
+   "clip": [
+    "1",
+    1
+   ]
+  }
+ },
+ "4": {
+  "class_type": "EmptyLatentImage",
+  "inputs": {
+   "width": 832,
+   "height": 1216,
+   "batch_size": 1
+  }
+ },
+ "5": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "fachada_lineart_control.png"
+  }
+ },
+ "6": {
+  "class_type": "ControlNetLoader",
+  "inputs": {
+   "control_net_name": "<controlnet SDXL>.safetensors"
+  }
+ },
+ "7": {
+  "class_type": "ControlNetApplyAdvanced",
+  "inputs": {
+   "positive": [
+    "2",
+    0
+   ],
+   "negative": [
+    "3",
+    0
+   ],
+   "control_net": [
+    "6",
+    0
+   ],
+   "image": [
+    "5",
+    0
+   ],
+   "strength": 0.85,
+   "start_percent": 0.0,
+   "end_percent": 0.9
+  }
+ },
+ "8": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "7",
+    0
+   ],
+   "negative": [
+    "7",
+    1
+   ],
+   "latent_image": [
+    "4",
+    0
+   ],
+   "seed": 0,
+   "steps": 32,
+   "cfg": 6.0,
+   "sampler_name": "dpmpp_2m",
+   "scheduler": "karras",
+   "denoise": 1.0
+  }
+ },
+ "9": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "8",
+    0
+   ],
+   "vae": [
+    "1",
+    2
+   ]
+  }
+ },
+ "10": {
+  "class_type": "ImageScaleBy",
+  "inputs": {
+   "image": [
+    "9",
+    0
+   ],
+   "upscale_method": "lanczos",
+   "scale_by": 2.0
+  }
+ },
+ "11": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "10",
+    0
+   ],
+   "vae": [
+    "1",
+    2
+   ]
+  }
+ },
+ "12": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "7",
+    0
+   ],
+   "negative": [
+    "7",
+    1
+   ],
+   "latent_image": [
+    "11",
+    0
+   ],
+   "seed": 0,
+   "steps": 16,
+   "cfg": 5.0,
+   "sampler_name": "dpmpp_2m",
+   "scheduler": "karras",
+   "denoise": 0.25
+  }
+ },
+ "13": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "12",
+    0
+   ],
+   "vae": [
+    "1",
+    2
+   ]
+  }
+ },
+ "14": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "13",
+    0
+   ],
+   "filename_prefix": "donceles_fachada_calle_s0"
+  }
+ }
+}

@@ -30,3 +30,19 @@ externo habría gastado créditos tuyos y enviado el proyecto a un tercero sin t
 muestra los dibujos de control y dice explícitamente «renders pendientes». La portada usa
 la fachada dibujada, no una imagen generada. La verificación «≥ 6 renders ≥ 2048 px con
 calificación ≥ 8/10» NO pasa, por lo tanto no se escribe `DONE`.
+
+## B2 · Verificación de precios con fuente — BLOQUEADO (parcial)
+
+**Qué pasa.** La red de esta sesión solo permite el buscador; abrir cualquier página de
+precios devuelve 403 del proxy (política de red del entorno «Default»). El agente de costos
+encontró 35 referencias pero no pudo abrir ninguna, así que, siguiendo la regla de no inventar,
+**las 96 partidas están marcadas `ESTIMADO`** y las 35 fuentes como `verificada: false`.
+
+**Qué se necesita.** Permitir estos hosts en el entorno (o correr la sesión con red abierta):
+tandacasa.com, oneestimate.ai, cronoshare.com.mx, habitissimo.com.mx, cmic.org.mx,
+inegi.org.mx, transparencia.cancun.gob.mx, mexico.justia.com, mercadolibre.com.mx,
+homedepot.com.mx, inmuebles24.com. Con eso se abren las fuentes, se pasa a `FUENTE` lo que
+sí respalde el P.U. y se corrige lo que no.
+
+**Mejor aún:** tres cotizaciones locales (block, concreto f'c 250, vigueta y bovedilla, herrería)
+que Isaac y Javier pueden conseguir; entran por `observaciones.csv`.
