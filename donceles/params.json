@@ -28,7 +28,7 @@
     "escalera_peraltes_por_piso": 16,
     "losa_m": 0.25,
     "tabique_bano_m": 0.1,
-    "losa_cimentacion_m": 0.45,
+    "losa_cimentacion_m": 0.35,
     "cubo_altura_m": 2.6,
     "losa_cubo_m": 0.2,
     "lavanderia_largo_int_m": 3.0,
@@ -36,7 +36,10 @@
     "tinaco_altura_m": 1.4,
     "tinaco_base_m": 0.5,
     "cisterna_altura_m": 1.8,
-    "barda_patio_m": 2.4
+    "barda_patio_m": 2.4,
+    "sascab_m": 0.3,
+    "plantilla_m": 0.05,
+    "excavacion_m": 0.5
   },
   "terreno": {
     "oferta_min": 820000,
@@ -370,7 +373,7 @@
       "pu": 25.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Regla de dedo de contratista; por confirmar.",
+      "supuesto": "Regla práctica de contratista; por confirmar.",
       "aplica_indirectos": true,
       "fase": "F3",
       "respaldo": "sin_referencia"
@@ -384,7 +387,7 @@
       "pu": 850.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "6 m de frente + 15 m de una colindancia; lámina y polines reutilizables; regla de dedo.",
+      "supuesto": "6 m de frente + 15 m de una colindancia; lámina y polines reutilizables; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F3",
       "respaldo": "sin_referencia"
@@ -394,11 +397,11 @@
       "capitulo": "Preliminares",
       "concepto": "Bodega provisional y sanitario portátil de obra",
       "unidad": "mes",
-      "cantidad": 9,
+      "cantidad": 11,
       "pu": 2800.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "9 meses de obra (F3–F6); renta de sanitario con limpieza + bodega; regla de dedo.",
+      "supuesto": "11 meses de obra (F3–F7, de las fases del proyecto); renta de sanitario con limpieza + bodega; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F3",
       "respaldo": "sin_referencia"
@@ -428,7 +431,7 @@
       "pu": 6000.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Lote de 90 m²; regla de dedo, incluye IVA.",
+      "supuesto": "Lote de 90 m²; regla práctica, incluye IVA.",
       "aplica_indirectos": false,
       "fase": "F0",
       "respaldo": "sin_referencia"
@@ -472,7 +475,7 @@
       "pu": 110.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Honorario por m², con IVA; regla de dedo.",
+      "supuesto": "Honorario por m², con IVA; regla práctica.",
       "aplica_indirectos": false,
       "fase": "F2",
       "respaldo": "sin_referencia"
@@ -486,7 +489,7 @@
       "pu": 70.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Honorario por m², con IVA; regla de dedo.",
+      "supuesto": "Honorario por m², con IVA; regla práctica.",
       "aplica_indirectos": false,
       "fase": "F2",
       "respaldo": "sin_referencia"
@@ -564,7 +567,7 @@
       "pu": 280.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Profundidad 0.50 m para no bajar del freático (−0.75 m); regla de dedo.",
+      "supuesto": "Profundidad 0.50 m para no bajar del freático (−0.75 m); regla práctica.",
       "aplica_indirectos": true,
       "fase": "F3",
       "respaldo": "sin_referencia"
@@ -592,7 +595,7 @@
       "pu": 650.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Capa de 30 cm compactada al 95 %; espesor por confirmar con mecánica de suelos.",
+      "supuesto": "Capa de 30 cm compactada al 95 %; espesor por confirmar con mecánica de suelos (parámetros técnicos de regla práctica, ESTIMADO).",
       "aplica_indirectos": true,
       "fase": "F3",
       "respaldo": "sin_referencia"
@@ -606,7 +609,7 @@
       "pu": 190.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Regla de dedo.",
+      "supuesto": "Regla práctica.",
       "aplica_indirectos": true,
       "fase": "F3",
       "respaldo": "sin_referencia"
@@ -620,7 +623,7 @@
       "pu": 260.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Polietileno 600 + impermeabilizante integral en el concreto; regla de dedo.",
+      "supuesto": "Polietileno 600 + impermeabilizante integral en el concreto; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F3",
       "respaldo": "sin_referencia"
@@ -653,7 +656,7 @@
         "F04",
         "F01"
       ],
-      "supuesto": "110 kg por m³ de concreto; tabulador CDMX $37,559.70/ton ÷ 1.2751 × 1.16 = $34.17/kg.",
+      "supuesto": "110 kg por m³ de concreto (regla práctica, ESTIMADO); tabulador CDMX $37,559.70/ton ÷ 1.2751 × 1.16 = $34.17/kg, redondeado a $34.50.",
       "aplica_indirectos": true,
       "fase": "F3",
       "respaldo": "referencia_no_verificada"
@@ -667,7 +670,7 @@
       "pu": 180.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Perímetro 2 × (6 + 15) m; regla de dedo.",
+      "supuesto": "Perímetro 2 × (6 + 15) m; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F3",
       "respaldo": "sin_referencia"
@@ -700,7 +703,7 @@
       "pu": 420.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "0.40 m de castillo por m² de muro (uno cada ≈2.5 m); PU regla de dedo.",
+      "supuesto": "0.40 m de castillo por m² de muro (uno cada ≈2.5 m); PU regla práctica.",
       "aplica_indirectos": true,
       "fase": "F4",
       "respaldo": "sin_referencia"
@@ -714,7 +717,7 @@
       "pu": 560.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "≈1.0 m de trabe/cadena por m² de losa (perímetro + ejes interiores); PU regla de dedo.",
+      "supuesto": "≈1.0 m de trabe/cadena por m² de losa (perímetro + ejes interiores); PU regla práctica.",
       "aplica_indirectos": true,
       "fase": "F4",
       "respaldo": "sin_referencia"
@@ -772,7 +775,7 @@
       "pu": 230.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Regla de dedo; v0 traía $35,000 global.",
+      "supuesto": "Regla práctica; v0 traía $35,000 global.",
       "aplica_indirectos": true,
       "fase": "F5",
       "respaldo": "sin_referencia"
@@ -786,7 +789,7 @@
       "pu": 9000.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "6 meses de renta de andamio y malacate; regla de dedo.",
+      "supuesto": "6 meses de renta de andamio y malacate; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F4",
       "respaldo": "sin_referencia"
@@ -800,7 +803,7 @@
       "pu": 650.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "8 salidas por estudio × 8 + 8 en lavandería y azotea; PU regla de dedo.",
+      "supuesto": "8 salidas por estudio × 8 + 8 en lavandería y azotea; PU regla práctica.",
       "aplica_indirectos": true,
       "fase": "F5",
       "respaldo": "sin_referencia"
@@ -814,7 +817,7 @@
       "pu": 750.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "4 por estudio × 8 + 8 en lavandería, azotea y patios; PU regla de dedo.",
+      "supuesto": "4 por estudio × 8 + 8 en lavandería, azotea y patios; PU regla práctica.",
       "aplica_indirectos": true,
       "fase": "F5",
       "respaldo": "sin_referencia"
@@ -828,7 +831,7 @@
       "pu": 320.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "4 bajadas × 15 m; regla de dedo.",
+      "supuesto": "4 bajadas × 15 m; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F5",
       "respaldo": "sin_referencia"
@@ -842,7 +845,7 @@
       "pu": 210.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Recorrido estimado sin proyecto; regla de dedo.",
+      "supuesto": "Recorrido estimado sin proyecto; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F5",
       "respaldo": "sin_referencia"
@@ -856,7 +859,7 @@
       "pu": 3200.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "4 registros de 40×60 cm; regla de dedo.",
+      "supuesto": "4 registros de 40×60 cm; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F5",
       "respaldo": "sin_referencia"
@@ -886,7 +889,7 @@
       "pu": 9000.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Firme reforzado y kit de conexión; regla de dedo.",
+      "supuesto": "Firme reforzado y kit de conexión; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F5",
       "respaldo": "sin_referencia"
@@ -914,7 +917,7 @@
       "pu": 6500.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Bomba ½–¾ HP con automático; regla de dedo.",
+      "supuesto": "Bomba ½–¾ HP con automático; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F5",
       "respaldo": "sin_referencia"
@@ -958,7 +961,7 @@
       "pu": 2400.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Línea económica; regla de dedo.",
+      "supuesto": "Línea económica; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -972,7 +975,7 @@
       "pu": 2200.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Línea económica; regla de dedo.",
+      "supuesto": "Línea económica; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -986,7 +989,7 @@
       "pu": 2600.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Línea económica; regla de dedo.",
+      "supuesto": "Línea económica; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -1000,7 +1003,7 @@
       "pu": 620.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "18 por estudio × 8 + 40 en áreas comunes; PU regla de dedo.",
+      "supuesto": "18 por estudio × 8 + 40 en áreas comunes; PU regla práctica.",
       "aplica_indirectos": true,
       "fase": "F5",
       "respaldo": "sin_referencia"
@@ -1014,7 +1017,7 @@
       "pu": 3800.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Tablero de 4–6 circuitos; regla de dedo.",
+      "supuesto": "Tablero de 4–6 circuitos; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F5",
       "respaldo": "sin_referencia"
@@ -1028,7 +1031,7 @@
       "pu": 4500.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "9 servicios monofásicos conforme a especificación CFE; regla de dedo.",
+      "supuesto": "9 servicios monofásicos conforme a especificación CFE; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F5",
       "respaldo": "sin_referencia"
@@ -1042,7 +1045,7 @@
       "pu": 260.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "9 alimentadores × ≈22 m promedio; regla de dedo.",
+      "supuesto": "9 alimentadores × ≈22 m promedio; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F5",
       "respaldo": "sin_referencia"
@@ -1056,7 +1059,7 @@
       "pu": 380.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "6 por estudio × 8 + 20 comunes; regla de dedo.",
+      "supuesto": "6 por estudio × 8 + 20 comunes; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -1070,7 +1073,7 @@
       "pu": 1900.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Uno por estudio; regla de dedo.",
+      "supuesto": "Uno por estudio; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F5",
       "respaldo": "sin_referencia"
@@ -1084,7 +1087,7 @@
       "pu": 450.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Solo ducto y registro; regla de dedo.",
+      "supuesto": "Solo ducto y registro; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F5",
       "respaldo": "sin_referencia"
@@ -1114,7 +1117,7 @@
       "pu": 45.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Dos caras por m² de muro, dos manos; v0 $72,000 global ≈ $40/m².",
+      "supuesto": "Dos caras por m² de muro, dos manos. P.U. de $45/m² por regla práctica (ESTIMADO, sin referencia); el global del v0 ($72,000) repartido en la superficie real daría ≈$64/m²: confirmar con cotización.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -1128,7 +1131,7 @@
       "pu": 780.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "8 baños × ≈19 m² (3 de piso + 16 de muro); v0 $18,000 por baño ≈ $947/m².",
+      "supuesto": "8 baños × ≈19 m² (3 de piso + 16 de muro). P.U. de $780/m² por regla práctica (ESTIMADO, sin referencia); el v0 ($18,000 por baño) equivale a ≈$947/m²: confirmar con cotización.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -1142,7 +1145,7 @@
       "pu": 95.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Resanes y dos manos de pintura vinílica; regla de dedo.",
+      "supuesto": "Resanes y dos manos de pintura vinílica; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -1170,7 +1173,7 @@
       "pu": 180.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Regla de dedo.",
+      "supuesto": "Regla práctica.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -1184,7 +1187,7 @@
       "pu": 35.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Regla de dedo.",
+      "supuesto": "Regla práctica.",
       "aplica_indirectos": true,
       "fase": "F7",
       "respaldo": "sin_referencia"
@@ -1198,7 +1201,7 @@
       "pu": 4200.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Perfil tubular con primario y esmalte negro; regla de dedo $3,800–5,500/m²; pedir 3 cotizaciones.",
+      "supuesto": "Perfil tubular con primario y esmalte negro; regla práctica $3,800–5,500/m²; pedir 3 cotizaciones.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -1212,7 +1215,7 @@
       "pu": 7500.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Lámina cal. 18 con aislamiento; regla de dedo.",
+      "supuesto": "Lámina cal. 18 con aislamiento; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -1240,7 +1243,7 @@
       "pu": 1900.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "≈10 m por nivel × 4; regla de dedo.",
+      "supuesto": "≈10 m por nivel × 4; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -1254,7 +1257,7 @@
       "pu": 22000.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Acceso por pasillo lateral de 1.10 m; regla de dedo.",
+      "supuesto": "Acceso por pasillo lateral de 1.10 m; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -1282,7 +1285,7 @@
       "pu": 1600.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Superficie supuesta 8 m²; regla de dedo.",
+      "supuesto": "Superficie supuesta 8 m²; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -1296,7 +1299,7 @@
       "pu": 900.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "2 por estudio; regla de dedo.",
+      "supuesto": "2 por estudio; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -1366,7 +1369,7 @@
       "pu": 2500.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "No estaba en v0; necesario para renta de largo plazo; regla de dedo.",
+      "supuesto": "No estaba en v0; necesario para renta de largo plazo; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -1380,7 +1383,7 @@
       "pu": 2400.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Cubre ≈55 % de la terraza; ≈25 kg/m² de acero; regla de dedo.",
+      "supuesto": "Cubre ≈55 % de la terraza; ≈25 kg/m² de acero; regla práctica (parámetros técnicos de regla práctica, ESTIMADO).",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -1394,7 +1397,7 @@
       "pu": 420.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Sobre la impermeabilización; regla de dedo.",
+      "supuesto": "Sobre la impermeabilización; regla práctica.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -1436,7 +1439,7 @@
       "pu": 4000.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Regla de dedo.",
+      "supuesto": "Regla práctica.",
       "aplica_indirectos": true,
       "fase": "F6",
       "respaldo": "sin_referencia"
@@ -1466,7 +1469,7 @@
       "pu": 2200.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Regla de dedo.",
+      "supuesto": "Regla práctica.",
       "aplica_indirectos": false,
       "fase": "F7",
       "respaldo": "sin_referencia"
@@ -1624,7 +1627,7 @@
       "pu": 600.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Regla de dedo.",
+      "supuesto": "Regla práctica.",
       "aplica_indirectos": false,
       "fase": "F7",
       "respaldo": "sin_referencia"
@@ -1638,7 +1641,7 @@
       "pu": 500.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Regla de dedo.",
+      "supuesto": "Regla práctica.",
       "aplica_indirectos": false,
       "fase": "F7",
       "respaldo": "sin_referencia"
@@ -1652,7 +1655,7 @@
       "pu": 1200.0,
       "estado": "ESTIMADO",
       "fuentes": [],
-      "supuesto": "Uno por nivel + lavandería; regla de dedo.",
+      "supuesto": "Uno por nivel + lavandería; regla práctica.",
       "aplica_indirectos": false,
       "fase": "F7",
       "respaldo": "sin_referencia"
@@ -1889,7 +1892,7 @@
   ],
   "retencion_garantia_pct": 0.05,
   "retencion_liberacion_dias": 60,
-  "nota_verificacion_precios": "Ninguna página pudo abrirse en esta sesión (red restringida: solo funcionó el buscador). Por eso todas las fuentes llevan verificada=false y todas las partidas quedan como ESTIMADO; el campo 'respaldo' distingue las que tienen una referencia publicada sin verificar de las que son regla de dedo.",
+  "nota_verificacion_precios": "Ninguna página pudo abrirse en esta sesión (red restringida: solo funcionó el buscador). Por eso todas las fuentes llevan verificada=false y todas las partidas quedan como ESTIMADO; el campo 'respaldo' distingue las que tienen una referencia publicada sin verificar de las que son regla práctica.",
   "rentas_mercado": {
     "resumen": "Anuncios 2026 (rentas pedidas, no cerradas; páginas no abiertas): estudio SM 62 $9,800; estudio SM 39 $10,000; estudio amueblado cerca de Mercado 28 $11,000 con agua e internet; estudio céntrico amueblado $6,600; estudios de 25 m² en SM 96 ≈$5,800. No se halló ningún estudio anunciado en SM 64. Las rentas v0 de $7,500–9,000 quedan en la mitad del rango y son plausibles para producto nuevo, pero el salario base de un trabajador de servicios (≈$9,000–9,500/mes) marca el techo de pago: se recomienda no subir el escenario base y probar −10 % en el conservador. Vacancia de renta de largo plazo en Cancún: sin dato publicado encontrado (ESTIMADO 5 %). Predial: tasa de 2.8 al millar en una versión no confirmada de la ley, con 15 % de descuento por pago en enero.",
     "fuentes": [
@@ -1898,5 +1901,11 @@
       "F33",
       "F16"
     ]
-  }
+  },
+  "hitos_pago": {
+    "F0": "Pago contra contrato o recibo de cada estudio y contrato de apartado, con autorización del inversionista. La constancia de uso de suelo favorable es la condición para pasar a F1."
+  },
+  "notas_cronograma": [
+    "La duración de F0 (un mes) es un supuesto optimista: reúne constancia de uso de suelo, libertad de gravamen, factibilidades de Aguakan y CFE y mecánica de suelos. Si F0 o F2 se alargan, todo el calendario se recorre; no cambia los importes, pero sí la fecha de la primera renta. ESTIMADO."
+  ]
 }

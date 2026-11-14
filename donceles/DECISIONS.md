@@ -30,3 +30,12 @@ Bitácora de decisiones y cambios a `params.json`. `apply_review.py` agrega aqu�
 - G5. **Paneles solares sobre la pérgola** (no caben 6 en azotea sin perder terraza).
 - G6. Cantidades del presupuesto ligadas a la geometría (`geo:`): losa de cimentación 78 m² (huella, no 90), losas 266.5 m², piso pulido 236.5 m², celosía dibujada 24.5 m² (no 40), muros 564.9 m² (una cara, netos de vanos). Con ello el costo directo base queda por debajo del estimado preliminar de costos (que supuso 900 m² de muro).
 - G7. Restricciones (0 / 0 / 2.00 m), COS 86.7 %, CUS 3.20, cero cajones de estacionamiento: supuestos «por confirmar con constancia de uso de suelo». Detalle y 14 preguntas abiertas en `docs/arquitecto_decisiones.md`.
+
+## v1.0 — correcciones tras la revisión independiente (REVIEW.md, 1.ª ronda)
+- R1. **Cimentación: una sola solución en plano y presupuesto.** Losa maciza de 0.35 m (antes dibujada de 0.45 m), excavación de 0.50 m para no bajar del freático, sascab 0.30 m y plantilla 0.05 m; el piso de PB queda por encima de la banqueta (ESTIMADO, por confirmar con mecánica de suelos y estructurista). Nuevos parámetros `losa_cimentacion_m`, `sascab_m`, `plantilla_m`, `excavacion_m`.
+- R2. **Partidas nuevas (ESTIMADO) para lo dibujado sin presupuesto**: escritorios de concreto, mesa de terraza, puertas de servicio en azotea y barda del patio; cantidades de pérgola, cimbra, mosquiteros y bancas ligadas a lo dibujado (`geo:`).
+- R3. **IVA**: se presupuesta con IVA incluido y sin recuperarlo; la exención del IVA en la renta queda «por confirmar con contador» (los estudios se entregan equipados) y entra como riesgo fiscal.
+- R4. Disparador del pago de F0 corregido (`hitos_pago.F0`): se paga contra contrato o recibo de cada estudio; la constancia favorable es la condición para pasar a F1. Nota sobre la duración optimista de F0 (`notas_cronograma`).
+- R5. Partida 1.05: 9 → 11 meses (duración real de F3–F7). Supuestos 3.07, 7.02 y 7.03 explican el P.U. usado.
+- R6. La planta de sitio (A-01) va a 1:150 para mostrar calle y vecinos; el resto de las láminas, a 1:100. Aceptado.
+- R7. El PDF y `presupuesto.xlsx` se versionan en git aunque cambien de bytes al reconstruir (fechas internas); es deliberado, para que los revisores los descarguen sin correr nada.

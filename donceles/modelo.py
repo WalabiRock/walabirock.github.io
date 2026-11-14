@@ -179,7 +179,7 @@ def money(x):
 
 
 def pct(x, d=1):
-    return f"{x * 100:.{d}f}%"
+    return f"{x * 100:.{d}f} %"
 
 
 if __name__ == "__main__":
