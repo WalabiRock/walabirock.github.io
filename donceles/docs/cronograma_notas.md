@@ -27,7 +27,7 @@ corregir cualquiera; casi todas se cambian con un parámetro.
   crece de L a L + retraso meses, y cada inicio/fin de fase se escala por (L + retraso) / L y
   se redondea a mes entero (mínimo 1 mes por fase). La entrega se recorre exactamente
   `retraso_meses`, igual que `mes_entrega` del modelo.
-- Conservador (+3 meses): F3 2→3, F4 4→5, F5 3→4, F6 3→4 meses, F7 1 mes; entrega 30 jun 2028
+- Conservador: el retraso (`retraso_meses` del escenario) estira F3–F7 de forma proporcional; las fechas exactas salen del modelo y se imprimen en el PDF.
   en lugar de 31 mar 2028.
 - Las fases previas (F0–F2) no se retrasan. El retraso no cambia importes, solo fechas y flujo.
 

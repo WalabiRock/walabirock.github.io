@@ -343,7 +343,7 @@ def plan_pagos(P, c):
             notas.append(f"Neto de retención de garantía del {modelo.pct(pct_ret, 0)} "
                          f"({modelo.money(D['retencion'][k])}).")
         if f["es_obra"]:
-            disparador = f"{FIRMA.capitalize()}: {f['entregable']}."
+            disparador = f"{(FIRMA[0].upper() + FIRMA[1:])}: {f['entregable']}."
         else:
             disparador = f["hito_pago"].replace("Pago contra entregable", "Entregable")
         filas.append({
