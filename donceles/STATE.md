@@ -3,19 +3,17 @@
 _Actualizado: 2026-11-14_
 
 ## Hecho
-- Kit copiado a `donceles/` (v0 de referencia en `out_v0/`).
-- `modelo.py`: modelo financiero único (presupuesto cantidad × PU, indirectos, contingencia, escalamiento, colchón, escenarios, rentas, sensibilidad) con redondeo exacto a pesos.
-- `exportar_xlsx.py`: `presupuesto.xlsx` con fórmulas vivas; verificado contra el modelo recalculando con LibreOffice.
-- `apply_review.py` + `observaciones.csv` + `Makefile`.
-- `BLOCKED.md`: renders (Spark/ComfyUI no alcanzable desde esta sesión).
+- `drawings.py` (arquitecto): 10 hojas A-01…A-10 a escala con pie de plano, escalera resuelta, cotas, cuadro de puertas y ventanas, imágenes de control; `tests/test_areas.py` (280 verificaciones).
+- `cost/` (costos): 96 partidas cantidad × P.U., 35 referencias; **todo ESTIMADO** (ver BLOCKED B2).
+- `cronograma.py`: fases, plan de pagos, flujo mensual, Gantt y curva.
+- `modelo.py`, `exportar_xlsx.py` (Excel con fórmulas vivas, verificado con LibreOffice), `build_pdf.py` (45 páginas), `verify_numbers.py`, `build.py`, `Makefile`.
+- `apply_review.py` + `observaciones.csv`: probado de punta a punta en una copia limpia (v1.0 → v1.1).
+- `renders/`: script de ComfyUI, plantillas de workflow, lista de calificación (sin renders: BLOCKED B1).
+- `python build.py` sale con 0.
 
 ## En curso
-- Agente arquitecto: `drawings.py` (escalera, cotas, cuadros, cortes, fachadas, sitio).
-- Agente de costos: partidas con fuentes (`cost/`).
-- Agente de cronograma y pagos: `cronograma.py`.
+- Revisor independiente → `REVIEW.md`; corregir hallazgos y repetir hasta APROBADO.
 
 ## Sigue
-- Integrar partidas y geometría en `params.json`; `DECISIONS.md`.
-- Preparar flujo de renders (workflows + script) para correr en el Spark.
-- Agente de PDF → `build.py`, `verify_numbers.py`.
-- Revisor independiente → `REVIEW.md`; corregir hasta APROBADO.
+- Renders en el Spark (necesita acceso; BLOCKED B1) y verificación de precios (BLOCKED B2).
+- `DONE` no se escribe mientras la verificación de renders no pase.
